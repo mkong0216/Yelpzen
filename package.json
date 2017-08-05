@@ -3,8 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "leaflet": "^1.1.0",
+    "leaflet-css": "^0.1.0",
+    "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-leaflet": "^1.4.1",
     "react-scripts": "1.0.10",
     "semantic-ui-css": "^2.2.11",
     "semantic-ui-react": "^0.71.3"

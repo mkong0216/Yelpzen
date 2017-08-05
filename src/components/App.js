@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import AppHeader from './AppHeader'
+import config from '../config'
+import MapContainer from './MapContainer'
 import './App.css'
 
 class App extends Component {
@@ -7,6 +9,7 @@ class App extends Component {
     return (
       <div className='App'>
         <AppHeader className='App-header' />
+        <MapContainer className='map-container' config={config} />
       </div>
     )
   }
