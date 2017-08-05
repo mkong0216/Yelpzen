@@ -40,59 +40,59 @@ class FindSearchBar extends React.Component {
 
 
 	// Will be called every time you need to recalculate suggestions
-  	onSuggestionsFetchRequested ({value}) {
-    	if (value.length >= 2) {
-      		this.autocomplete(value)
-    	}
+  onSuggestionsFetchRequested ({value}) {
+    if (value.length >= 2) {
+    	this.autocomplete(value)
+    }
+  }
+
+  // Will be called every time you need to set suggestions to []
+  onSuggestionsClearRequested () {
+    this.setState({
+      suggestions: []
+    })
+  }
+
+	// Teach Autosuggest what should be input value when suggestion is clicked
+	getSuggestionValue (suggestion) {
+  	 return suggestion.properties.label
+	}
+
+	// Will be called every time suggestion is selected via mouse or keyboard
+	onSuggestionSelected (event, {suggestion, suggestionValue, suggestionIndex, sectionIndex, method}) {
+	}
+
+	renderSuggestion (suggestion, {query, isHighlighted}) {
+  	const label = suggestion.properties.label
+
+  	// Highlight the input query
+  	const r = new RegExp(`(${query})`, 'gi')
+  	const highlighted = label.split(r)
+  	for (let i = 0; i < highlighted.length; i++) {
+    		if (highlighted[i].toLowerCase() === query.toLowerCase()) {
+      		highlighted[i] = <strong key={i}>{highlighted[i]}</strong>
+    		}
   	}
 
-  	// Will be called every time you need to set suggestions to []
-  	onSuggestionsClearRequested () {
-    	this.setState({
-      		suggestions: []
-    	})
-  	}
+  	return (
+    		<div className="map-search-suggestion-item">
+      		<Icon name="marker" />{highlighted}
+    		</div>
+  	)
+	}
 
-  	// Teach Autosuggest what should be input value when suggestion is clicked
-  	getSuggestionValue (suggestion) {
-    	return suggestion.properties.label
-  	}
+	onChangeAutosuggest (event, {newValue, method}) {
+  	this.setState({
+    		value: newValue
+  	})
+	}
 
-  	// Will be called every time suggestion is selected via mouse or keyboard
-  	onSuggestionSelected (event, {suggestion, suggestionValue, suggestionIndex, sectionIndex, method}) {
-  	}
-
-  	renderSuggestion (suggestion, {query, isHighlighted}) {
-    	const label = suggestion.properties.label
-
-    	// Highlight the input query
-    	const r = new RegExp(`(${query})`, 'gi')
-    	const highlighted = label.split(r)
-    	for (let i = 0; i < highlighted.length; i++) {
-      		if (highlighted[i].toLowerCase() === query.toLowerCase()) {
-        		highlighted[i] = <strong key={i}>{highlighted[i]}</strong>
-      		}
-    	}
-
-    	return (
-      		<div className="map-search-suggestion-item">
-        		<Icon name="marker" />{highlighted}
-      		</div>
-    	)
-  	}
-
-  	onChangeAutosuggest (event, {newValue, method}) {
-    	this.setState({
-      		value: newValue
-    	})
-  	}
-
-  	// Makes autocomplete request to Mapzen Search based on what user has typed
-  	autocomplete (query) {
-  		// Store lat/lng of locality to use in this url  (focus.point.lat, focus.point.lon)
-    	const endpoint = `https://search.mapzen.com/v1/autocomplete?text=${query}&api_key=${this.props.config.mapzen.apiKey}&layers=venue`
-    	this.throttleMakeRequest(endpoint)
-  	}
+	// Makes autocomplete request to Mapzen Search based on what user has typed
+	autocomplete (query) {
+		// Store lat/lng of locality to use in this url  (focus.point.lat, focus.point.lon)
+  	const endpoint = `https://search.mapzen.com/v1/autocomplete?text=${query}&api_key=${this.props.config.mapzen.apiKey}&layers=venue`
+  	this.throttleMakeRequest(endpoint)
+	}
 
   	// Makes search request based on what user has entered
  	search (query) {
@@ -101,51 +101,51 @@ class FindSearchBar extends React.Component {
     	this.throttleMakeRequest(endpoint)
   	}
 
-  	makeRequest (endpoint) {
-    	window.fetch(endpoint)
-      		.then(response => response.json())
-      		.then((results) => {
-        		this.setState({
-          			suggestions: results.features
-        		})
+	makeRequest (endpoint) {
+  	window.fetch(endpoint)
+    		.then(response => response.json())
+    		.then((results) => {
+      		this.setState({
+        			suggestions: results.features
       		})
+    		})
+	}
+
+	// Clear button only appears when there's more than two characters in input
+	renderClearButton (value) {
+  	if (value.length > 2) {
+    		return (
+      		<Icon name="close" className="clear-search" onClick={this.clearSearch} />
+    		)
   	}
+	}
 
-  	// Clear button only appears when there's more than two characters in input
-  	renderClearButton (value) {
-    	if (value.length > 2) {
-      		return (
-        		<Icon name="close" className="clear-search" onClick={this.clearSearch} />
-      		)
-    	}
+	clearSearch (event) {
+  	// Set state value back to empty string
+  	this.setState({
+    		value: ''
+  	})
+  }
+
+  // Now Autosuggest component is wrapped in a form so that when 'enter' is pressed, suggestions container is not closed automatically
+	// Instead search results are returned in suggestions container
+	handleSubmit (event) {
+  	event.preventDefault()
+  	const inputValue = this.autosuggestBar.input.value
+  	if (inputValue !== '') {
+    		this.search(inputValue)
   	}
+	}
 
-  	clearSearch (event) {
-    	// Set state value back to empty string
-    	this.setState({
-      		value: ''
-    	})
-    }
-
-    // Now Autosuggest component is wrapped in a form so that when 'enter' is pressed, suggestions container is not closed automatically
-  	// Instead search results are returned in suggestions container
-  	handleSubmit (event) {
-    	event.preventDefault()
-    	const inputValue = this.autosuggestBar.input.value
-    	if (inputValue !== '') {
-      		this.search(inputValue)
-    	}
-  	}
-
-  	renderInputComponent(inputProps) {
-	    return (
-	      	<div className='input-container'>
-	        	<Icon name='search' className='search-icon' />
-	        	<input {...inputProps} />
-	        	{this.renderClearButton(this.state.value)}
-	      	</div>
-	    )
-	} 
+	renderInputComponent(inputProps) {
+    return (
+      	<div className='input-container'>
+        	<Icon name='search' className='search-icon' />
+        	<input {...inputProps} />
+        	{this.renderClearButton(this.state.value)}
+      	</div>
+    )
+  } 
 
 	render() {
 		const inputProps = {

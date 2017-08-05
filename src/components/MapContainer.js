@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Map from './Map'
 
@@ -9,17 +10,23 @@ class MapContainer extends React.Component {
 	}
 
 	render() {
-		const { config } = this.props
+		const { config, map } = this.props
 		return(
 			<div className={this.props.className}>
 				<Map 
 					config={config}
-					center={config.map.center}
-					zoom={config.map.zoom}
+					center={map.coordinates}
+					zoom={map.zoom}
 				/>
 			</div>
 		)
 	}
 }
 
-export default MapContainer
+function mapStateToProps(state) {
+	return {
+		map: state.map
+	}
+}
+
+export default connect(mapStateToProps)(MapContainer)
