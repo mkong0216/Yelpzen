@@ -1,0 +1,5 @@
+.Sidebar {
+	padding: 1rem;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
