@@ -1,13 +1,8 @@
-.App {
-  text-align: center;
-}
-
-
 .App-header {
   background-color: #2c1e3f;
-  height: 185px;
+  height: 200px;
   padding: 20px;
-  color: white;
+  text-align: center;
 }
 
 .ui.header {
@@ -16,7 +11,7 @@
 
 .map-container {
 	position: fixed;
-	top: 185px;
+	top: 200px;
 	right: 0;
 	width: calc(100% - 400px);
 	height: 100%;
@@ -24,7 +19,19 @@
 
 .sidebar-container {
 	position: fixed;
+	top: 200px;
 	width: 400px;
 	height: 100%;
 	background-color: #f8f8f8
+}
+
+.search-bars {
+	position: absolute;
+	width: 700px;
+	height: 75px;
+	top: 65px;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	margin: 0 auto;
 }

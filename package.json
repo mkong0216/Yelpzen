@@ -5,8 +5,10 @@
   "dependencies": {
     "leaflet": "^1.1.0",
     "leaflet-css": "^0.1.0",
+    "lodash": "^4.17.4",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
+    "react-autosuggest": "^9.3.2",
     "react-dom": "^15.6.1",
     "react-leaflet": "^1.4.1",
     "react-scripts": "1.0.10",

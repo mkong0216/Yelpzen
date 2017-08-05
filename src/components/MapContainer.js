@@ -7,7 +7,7 @@ class MapContainer extends React.Component {
 		className: PropTypes.string,
 		config: PropTypes.object.isRequired
 	}
-	
+
 	render() {
 		const { config } = this.props
 		return(

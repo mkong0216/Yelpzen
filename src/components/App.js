@@ -9,7 +9,7 @@ class App extends Component {
   render() {
     return (
       <div className='App'>
-        <AppHeader className='App-header' />
+        <AppHeader className='App-header' config={config} />
         <Sidebar className='sidebar-container' />
         <MapContainer className='map-container' config={config} />
       </div>
