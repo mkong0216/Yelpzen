@@ -6,13 +6,17 @@ import { setVenues } from './store/actions/venues'
 
 export function geolocateMe() {
 	const geolocation = window.navigator.geolocation
-	geolocation.getCurrentPosition(onGeolocateSuccess)
+	geolocation.getCurrentPosition(onGeolocateSuccess, error)
 }
 
 export function onGeolocateSuccess(position) {
 	const latlng = [position.coords.latitude, position.coords.longitude]
 	store.dispatch(setMapView(latlng, 10))
 	getHierarchies(latlng)
+}
+
+export function error() {
+	alert('Could not find your geolocation')
 }
 
 export function getHierarchies(latlng) {
@@ -41,7 +45,7 @@ export function getHierarchies(latlng) {
 }
 
 export function getDescendants(id) {
-	const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getDescendants&api_key=${config.mapzen.apiKey}&id=${id}&placetype=venue&is_current=1&extras=wof:tags,addr:, sg:`
+	const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getDescendants&api_key=${config.mapzen.apiKey}&id=${id}&placetype=venue&is_current=1&extras=wof:tags,addr:`
 	window.fetch(endpoint)
 		.then(response => response.json())
 		.then((results) => {
