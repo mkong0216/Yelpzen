@@ -7,9 +7,9 @@ const initialState = {
 }
 
 const map = (state = initialState, action) => {
-	console.log('setting map view')
 	switch (action.type) {
 		case SET_MAP_VIEW:
+			console.log('setting map view')
 			return {
 				...state,
 				coordinates: action.latlng,

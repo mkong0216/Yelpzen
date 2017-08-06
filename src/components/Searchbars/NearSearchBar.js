@@ -1,16 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import Autosuggest from 'react-autosuggest'
 import { Icon } from 'semantic-ui-react'
 import { throttle } from 'lodash'
+import { setMapView } from '../../store/actions/map'
+import { resetLocality } from '../../store/actions/locality'
 import './Searchbar.css'
 
 class NearSearchBar extends React.Component {
 	static propTypes = {
 		className: PropTypes.string,
 		config: PropTypes.object.isRequired,
-		//locality: PropTypes.array.isRequired
 	}
 
 	constructor(props) {
@@ -38,6 +40,11 @@ class NearSearchBar extends React.Component {
 
 	}
 
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.label !== this.props.label) {
+			this.setState({ value: nextProps.label})
+		}
+	}
 	// Will be called every time you need to recalculate suggestions
 	onSuggestionsFetchRequested ({value}) {
     	if (value.length >= 2) {
@@ -59,6 +66,14 @@ class NearSearchBar extends React.Component {
 
 	// Will be called every time suggestion is selected via mouse or keyboard
 	onSuggestionSelected (event, {suggestion, suggestionValue, suggestionIndex, sectionIndex, method}) {
+		const latlng = [suggestion.geometry.coordinates[1], suggestion.geometry.coordinates[0]]
+		const label = suggestion.properties.label
+		const source = {
+			name: suggestion.properties.name,
+			id: Number(suggestion.properties['source_id'])
+		}
+		this.props.setMapView(latlng, 10)
+		this.props.resetLocality(label, source)
 	}
 
 	renderSuggestion (suggestion, {query, isHighlighted}) {
@@ -75,7 +90,7 @@ class NearSearchBar extends React.Component {
 
 	  	return (
 	  		<div className="map-search-suggestion-item">
-	      		<Icon name="marker" />{highlighted}
+	      		<Icon name="map pin" />{highlighted}
 	    	</div>
 	  	)
 	}
@@ -88,14 +103,12 @@ class NearSearchBar extends React.Component {
 
 	// Makes autocomplete request to Mapzen Search based on what user has typed
 	autocomplete (query) {
-		// Store lat/lng of locality to use in this url  (focus.point.lat, focus.point.lon)
-  		const endpoint = `https://search.mapzen.com/v1/autocomplete?text=${query}&api_key=${this.props.config.mapzen.apiKey}&layers=coarse`
+  		const endpoint = `https://search.mapzen.com/v1/autocomplete?text=${query}&api_key=${this.props.config.mapzen.apiKey}&layers=coarse&sources=wof`
   		this.throttleMakeRequest(endpoint)
 	}
 
 	// Makes search request based on what user has entered
 	search (query) {
-		// Store lat/lng of locality to use in this url  (focus.point.lat, focus.point.lon)
   		const endpoint = `https://search.mapzen.com/v1/search?text=${query}&api_key=${this.props.config.mapzen.apiKey}&layers=coarse`
   		this.throttleMakeRequest(endpoint)
 	}
@@ -147,7 +160,7 @@ class NearSearchBar extends React.Component {
 						ref={(ref) => { this.autosuggestBar = ref }}
 						suggestions={this.state.suggestions}
 						onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-						onSuggestionsSelected={this.onSuggestionsSelected}
+						onSuggestionSelected={this.onSuggestionSelected}
 						onSuggestionsClearRequested={this.onSuggestionsClearRequested}
 						getSuggestionValue={this.getSuggestionValue}
 						renderSuggestion={this.renderSuggestion}
@@ -162,7 +175,12 @@ class NearSearchBar extends React.Component {
 
 function mapStateToProps(state) {
 	return {
-		locality: state.locality
+		label: state.locality.label
 	}
 }
-export default connect(mapStateToProps)(NearSearchBar)
+
+function mapDispatchToProps(dispatch) {
+	return bindActionCreators({resetLocality, setMapView}, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NearSearchBar)

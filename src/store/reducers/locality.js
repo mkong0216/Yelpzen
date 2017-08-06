@@ -1,4 +1,4 @@
-import { SET_LOCALITY } from '../actions'
+import { SET_LOCALITY, RESET_LOCALITY } from '../actions'
 
 const initialState = {
 	label: '',
@@ -13,6 +13,12 @@ const locality = (state = initialState, action) => {
 				...state,
 				label: action.label,
 				neighbourhoods: [...state.neighbourhoods, action.neighbourhood]
+			}
+		case RESET_LOCALITY: 
+			return {
+				...state,
+				label: action.label,
+				neighbourhoods: [action.neighbourhood]
 			}
 		default:
 			return state

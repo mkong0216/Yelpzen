@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Header, Loader, Dimmer } from 'semantic-ui-react'
-import VenueSpot from './VenueSpot'
+import VenueHeader from './VenueHeader'
 import { getDescendants } from '../wofMethods'
 
 class LocalSpots extends React.Component {
@@ -10,28 +10,45 @@ class LocalSpots extends React.Component {
 
 		this.state = {
 			isLoading: true,
+			localSpots: []
 		}
+
+		this.makeRequest = this.makeRequest.bind(this)
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.neighbourhoods.length !== this.props.neighbourhoods.length) {
+		if (nextProps.neighbourhoods.length !== 0) {
+			console.log('receiving props')
 			const neighbourhood_id = nextProps.neighbourhoods[0].id
-			getDescendants(neighbourhood_id)
-			this.setState({ isLoading: false })
+			const endpoint = getDescendants(neighbourhood_id)
+			this.makeRequest(endpoint)
 		}
 	}
 	
+	makeRequest(endpoint) {
+		window.fetch(endpoint)
+			.then(response => response.json())
+			.then((results) => {
+				const venues = results.places.slice(0,10)
+				this.setState({
+					localSpots: venues,
+					isLoading: false
+				})
+			})
+	}
+
 	render() {
 		console.log('mounting local spots')
-		const { venues } = this.props
+		const venues = this.state.localSpots
+		console.log(venues)
 		return(
 			<div className='local-spots'>
-				<Header as='h3'> Great spots near you </Header>
+				<Header as='h3'> Great spots near <i> {this.props.label} </i> </Header>
 				<Dimmer active={this.state.isLoading}>
 					<Loader> Finding spots near you </Loader>
 				</Dimmer>
 				{venues.map((venue, i) =>
-					<VenueSpot key={i} i={i} venue={venue} />
+					<VenueHeader key={i} i={i} venue={venue} />
 				)}
 			</div>
 		)
@@ -40,9 +57,8 @@ class LocalSpots extends React.Component {
 
 function mapStateToProps(state) {
 	return {
-		neighbourhoods: state.locality.neighbourhoods,
-		venues: state.venues.venues,
-		coordinates: state.map.coordinates
+		label: state.locality.label,
+		neighbourhoods: state.locality.neighbourhoods
 	}
 }
 
