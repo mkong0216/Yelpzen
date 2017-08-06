@@ -44,6 +44,6 @@ export function getHierarchies(latlng) {
 }
 
 export function getDescendants(id) {
-	const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getDescendants&api_key=${config.mapzen.apiKey}&id=${id}&placetype=venue&is_current=1&extras=wof:tags,addr:`
+	const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getDescendants&api_key=${config.mapzen.apiKey}&id=${id}&placetype=venue&is_current=1&exclude=nullisland&extras=wof:tags,addr:`
 	return endpoint
 }
