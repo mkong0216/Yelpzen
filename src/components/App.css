@@ -5,8 +5,8 @@
   text-align: center;
 }
 
-.ui.header {
-  color: white !important;
+h1.ui.header {
+	color: white !important;
 }
 
 .map-container {

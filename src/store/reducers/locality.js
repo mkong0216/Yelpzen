@@ -8,6 +8,7 @@ const initialState = {
 const locality = (state = initialState, action) => {
 	switch (action.type) {
 		case SET_LOCALITY:
+			console.log('setting locality')
 			return {
 				...state,
 				label: action.label,

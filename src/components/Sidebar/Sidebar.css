@@ -3,3 +3,32 @@
 	overflow-x: hidden;
 	overflow-y: auto;
 }
+
+.local-spots {
+	max-height: 60vh;
+	overflow-y: scroll;
+}
+
+.venue {
+	border-bottom: solid 2px #f8f8f8;
+	padding: 5px;
+}
+
+.venue:last-of-type {
+	border: none;
+}
+
+.header {
+	font-family: 'Open Sans';
+	font-size: 16px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.description {
+	padding: 3px;
+}
+
+.ui.tag.label {
+	margin-right: 5px;
+}

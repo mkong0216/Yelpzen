@@ -9,6 +9,7 @@ import './App.css'
 
 class App extends Component {
   render() {
+    console.log('mounting app')
     return (
       <Provider store={store}>
         <div className='App'>

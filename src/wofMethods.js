@@ -2,6 +2,7 @@ import config from './config'
 import store from './store'
 import { setLocality } from './store/actions/locality'
 import { setMapView } from './store/actions/map'
+import { setVenues } from './store/actions/venues'
 
 export function geolocateMe() {
 	const geolocation = window.navigator.geolocation
@@ -36,5 +37,15 @@ export function getHierarchies(latlng) {
 					store.dispatch(setLocality(label, neighbourhood))
 				}
 			}
+		})
+}
+
+export function getDescendants(id) {
+	const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getDescendants&api_key=${config.mapzen.apiKey}&id=${id}&placetype=venue&is_current=1&extras=wof:tags,addr:, sg:`
+	window.fetch(endpoint)
+		.then(response => response.json())
+		.then((results) => {
+			const venues = results.places.slice(0,10)
+			store.dispatch(setVenues(venues))
 		})
 }
