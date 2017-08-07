@@ -6,7 +6,7 @@ import Autosuggest from 'react-autosuggest'
 import { Icon } from 'semantic-ui-react'
 import { throttle } from 'lodash'
 import { setMapView } from '../../store/actions/map'
-import { resetLocality } from '../../store/actions/locality'
+import { setLocality } from '../../store/actions/locality'
 import './Searchbar.css'
 
 class NearSearchBar extends React.Component {
@@ -73,7 +73,7 @@ class NearSearchBar extends React.Component {
 			id: Number(suggestion.properties['source_id'])
 		}
 		this.props.setMapView(latlng, 10)
-		this.props.resetLocality(label, source)
+		this.props.setLocality(label, source)
 	}
 
 	renderSuggestion (suggestion, {query, isHighlighted}) {
@@ -180,7 +180,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({resetLocality, setMapView}, dispatch)
+	return bindActionCreators({setLocality, setMapView}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NearSearchBar)

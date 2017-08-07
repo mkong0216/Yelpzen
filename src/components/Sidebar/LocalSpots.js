@@ -20,7 +20,7 @@ class LocalSpots extends React.Component {
 	componentWillReceiveProps(nextProps) {
 		if (isEqual(this.props.neighbourhoods, nextProps.neighbourhoods)) { return }
 		console.log('receiving new props')
-		const neighbourhood_id = nextProps.neighbourhoods[0].id
+		const neighbourhood_id = nextProps.neighbourhoods.id
 		const endpoint = getDescendants(neighbourhood_id)
 		this.makeRequest(endpoint)
 	}
