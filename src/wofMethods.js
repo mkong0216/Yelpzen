@@ -71,3 +71,8 @@ export function getDescendants(id) {
 	const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getDescendants&api_key=${config.mapzen.apiKey}&id=${id}&placetype=venue&iscurrent=1&exclude=nullisland&extras=wof:tags,addr:,sg:classifiers`
 	return endpoint
 }
+
+export function getInfo(id) {
+	const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getInfo&api_key=${config.mapzen.apiKey}&id=${id}&extras=wof:tags,addr:,sg:,geom:latitude, geom:longitude`
+	return endpoint
+}

@@ -66,7 +66,7 @@ class FindSearchBar extends React.Component {
 	renderSuggestion (suggestion, {query, isHighlighted}) {
 	  	const label = suggestion['wof:name']
 	  	const cityState = suggestion['sg:city'] + ', ' + suggestion['sg:province']
-
+	  	const id = suggestion['wof:id']
 	  	// Highlight the input query
 	  	const r = new RegExp(`(${query})`, 'gi')
 	  	const highlighted = label.split(r)
@@ -77,7 +77,7 @@ class FindSearchBar extends React.Component {
 	  	}
 
 	  	return (
-	  		<Link to={`/venue/${label}`}>
+	  		<Link to={`/venue/${label}/${id}`}>
 		    	<div className="map-search-suggestion-item">
 		      		<Icon name="marker" /> {highlighted}{', ' + cityState}
 		    	</div>
