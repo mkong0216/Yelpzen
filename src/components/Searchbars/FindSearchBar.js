@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import Autosuggest from 'react-autosuggest'
 import { Icon } from 'semantic-ui-react'
@@ -76,9 +77,11 @@ class FindSearchBar extends React.Component {
 	  	}
 
 	  	return (
-	    	<div className="map-search-suggestion-item">
-	      		<Icon name="marker" /> {highlighted}{', ' + cityState}
-	    	</div>
+	  		<Link to={`/venue/${label}`}>
+		    	<div className="map-search-suggestion-item">
+		      		<Icon name="marker" /> {highlighted}{', ' + cityState}
+		    	</div>
+		    </Link>
 	  	)
 	}
 

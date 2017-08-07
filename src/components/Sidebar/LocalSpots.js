@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Header, Loader, Dimmer } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import { Header, Loader, Dimmer, List, Label } from 'semantic-ui-react'
 import { isEqual } from 'lodash'
-import VenueHeader from './VenueHeader'
 import { getDescendants, compare } from '../../wofMethods'
 
 class LocalSpots extends React.Component {
@@ -15,6 +15,7 @@ class LocalSpots extends React.Component {
 		}
 
 		this.makeRequest = this.makeRequest.bind(this)
+		this.renderLocalSpot = this.renderLocalSpot.bind(this)
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -39,6 +40,26 @@ class LocalSpots extends React.Component {
 			})
 	}
 
+	renderLocalSpot(venue, i) {
+		return (
+			<List.Item className='venue' key={i}>
+				<List.Content>
+					<List.Header>  
+						<List.Icon name='marker' />
+						<Link to={`/venue/${venue['wof:name']}/${venue['wof:id']}`}>
+							{ venue['wof:name'] } 
+						</Link>
+					</List.Header>
+					<List.Description className='address'> { venue['addr:full'] } </List.Description>
+					<List.Description className='tags'> 
+						{ venue['wof:tags'].map((tag, i) => 
+							<Label key={i} tag size='small'> { tag } </Label>
+						)}
+					</List.Description>
+				</List.Content>
+			</List.Item>
+		)
+	}
 	render() {
 		console.log('mounting local spots')
 		const venues = this.state.localSpots
@@ -48,9 +69,7 @@ class LocalSpots extends React.Component {
 				<Dimmer active={this.state.isLoading}>
 					<Loader> Finding spots near you </Loader>
 				</Dimmer>
-				{venues.map((venue, i) =>
-					<VenueHeader key={i} i={i} venue={venue} />
-				)}
+				{venues.map(this.renderLocalSpot)}
 			</div>
 		)
 	}
