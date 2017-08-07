@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Header, Loader, Dimmer } from 'semantic-ui-react'
 import { isEqual } from 'lodash'
 import VenueHeader from './VenueHeader'
-import { getDescendants } from '../wofMethods'
+import { getDescendants, compare } from '../../wofMethods'
 
 class LocalSpots extends React.Component {
 	constructor(props) {
@@ -17,9 +17,10 @@ class LocalSpots extends React.Component {
 		this.makeRequest = this.makeRequest.bind(this)
 	}
 
-	componentDidUpdate(prevProps) {
-		if (isEqual(this.props.neighbourhoods, prevProps.neighbourhoods)) { return }
-		const neighbourhood_id = this.props.neighbourhoods[0].id
+	componentWillReceiveProps(nextProps) {
+		if (isEqual(this.props.neighbourhoods, nextProps.neighbourhoods)) { return }
+		console.log('receiving new props')
+		const neighbourhood_id = nextProps.neighbourhoods[0].id
 		const endpoint = getDescendants(neighbourhood_id)
 		this.makeRequest(endpoint)
 	}
@@ -28,9 +29,11 @@ class LocalSpots extends React.Component {
 		window.fetch(endpoint)
 			.then(response => response.json())
 			.then((results) => {
-				const venues = results.places.slice(0,10)
+				const venues = results.places
+				venues.sort(compare)
+				const localSpots = venues.slice(0,10)
 				this.setState({
-					localSpots: venues,
+					localSpots: localSpots,
 					isLoading: false
 				})
 			})
@@ -39,7 +42,6 @@ class LocalSpots extends React.Component {
 	render() {
 		console.log('mounting local spots')
 		const venues = this.state.localSpots
-		console.log(venues)
 		return(
 			<div className='local-spots'>
 				<Header as='h3'> Great spots near <i> {this.props.label} </i> </Header>

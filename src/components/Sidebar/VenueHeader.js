@@ -2,6 +2,10 @@ import React from 'react'
 import { List, Label } from 'semantic-ui-react'
 
 class VenueHeader extends React.Component {
+	constructor(props) {
+		super(props) 
+
+	}
 	render() {
 		const { venue } = this.props
 		return (

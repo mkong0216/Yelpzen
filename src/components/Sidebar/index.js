@@ -1,6 +1,6 @@
 import React from 'react'
 import { Segment } from 'semantic-ui-react'
-import LocalSpots from '../LocalSpots'
+import LocalSpots from './LocalSpots'
 import './Sidebar.css'
 
 class Sidebar extends React.Component {
