@@ -13,6 +13,19 @@
   z-index: 10;
 }
 
+.clear-search {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  right: 2px;
+  top: 9px;
+}
+
+.clear-search:hover {
+  color: #666;
+  cursor: pointer;
+}
+
 .react-autosuggest__container {
   position: relative;
 }

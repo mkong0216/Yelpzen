@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Header, Loader, Dimmer } from 'semantic-ui-react'
+import { isEqual } from 'lodash'
 import VenueHeader from './VenueHeader'
 import { getDescendants } from '../wofMethods'
 
@@ -16,15 +17,13 @@ class LocalSpots extends React.Component {
 		this.makeRequest = this.makeRequest.bind(this)
 	}
 
-	componentWillReceiveProps(nextProps) {
-		if (nextProps.neighbourhoods.length !== 0) {
-			console.log('receiving props')
-			const neighbourhood_id = nextProps.neighbourhoods[0].id
-			const endpoint = getDescendants(neighbourhood_id)
-			this.makeRequest(endpoint)
-		}
+	componentDidUpdate(prevProps) {
+		if (isEqual(this.props.neighbourhoods, prevProps.neighbourhoods)) { return }
+		const neighbourhood_id = this.props.neighbourhoods[0].id
+		const endpoint = getDescendants(neighbourhood_id)
+		this.makeRequest(endpoint)
 	}
-	
+
 	makeRequest(endpoint) {
 		window.fetch(endpoint)
 			.then(response => response.json())
