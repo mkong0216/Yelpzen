@@ -18,9 +18,9 @@ class LocalSpots extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (isEqual(this.props.neighbourhoods, nextProps.neighbourhoods)) { return }
+		if (isEqual(this.props.source, nextProps.source)) { return }
 		console.log('receiving new props')
-		const neighbourhood_id = nextProps.neighbourhoods.id
+		const neighbourhood_id = nextProps.source.id
 		const endpoint = getDescendants(neighbourhood_id)
 		this.makeRequest(endpoint)
 	}
@@ -59,7 +59,7 @@ class LocalSpots extends React.Component {
 function mapStateToProps(state) {
 	return {
 		label: state.locality.label,
-		neighbourhoods: state.locality.neighbourhoods
+		source: state.locality.source
 	}
 }
 

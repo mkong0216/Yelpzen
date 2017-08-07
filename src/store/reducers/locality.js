@@ -2,7 +2,7 @@ import { SET_LOCALITY } from '../actions'
 
 const initialState = {
 	label: '',
-	neighbourhoods: null
+	source: null
 }
 
 const locality = (state = initialState, action) => {
@@ -12,7 +12,7 @@ const locality = (state = initialState, action) => {
 			return {
 				...state,
 				label: action.label,
-				neighbourhoods: action.neighbourhood
+				source: action.source
 			}
 		default:
 			return state
