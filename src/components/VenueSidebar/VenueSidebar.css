@@ -1,9 +1,20 @@
 .venue-sidebar {
 	padding: 1rem;
+	max-height: calc(100% - 200px);
 	overflow-x: hidden;
-	overflow-y: auto;
+	overflow-y: scroll;
 }
 
 .categories-tags {
 	margin: 5px 0px;
+}
+
+.venue-contact {
+	padding: 5px;
+	margin-top: 10px;
+}
+
+.ui.pointing.label.rating-label {
+	position: absolute;
+	margin-left: 10px;
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import { isEqual } from 'lodash'
-import { Header, Label, Icon } from 'semantic-ui-react'
+import { Header, Label, Icon, List, Button, Input } from 'semantic-ui-react'
 import { getInfo } from '../../wofMethods'
 
 class VenueSpot extends React.Component {
@@ -11,7 +11,9 @@ class VenueSpot extends React.Component {
 			address: '',
 			tags: [],
 			categories: {},
-			phone: ''
+			phone: '',
+			website: '',
+			addingTag: false
 		}
 
 		const endpoint = getInfo(this.props.id)
@@ -30,18 +32,25 @@ class VenueSpot extends React.Component {
 			.then((results) => {
 				console.log(results.place)
 				const phone = results.place['sg:phone']
+				const website = results.place['sg:website']
 				this.setState({
 					address: results.place['addr:full'],
 					tags: results.place['wof:tags'],
 					categories: results.place['sg:classifiers'][0],
-					phone: (phone.length > 15) ? phone : ''
+					phone: (phone.length > 10) ? phone : 'N/A',
+					website: (website !== undefined) ? website : 'N/A'
 				})
 			})
 	}
 
+	addTag(event) {
+		console.log(event)
+	}
+
 	render() {
 		const { name } = this.props
-		const { address, tags, categories, phone } = this.state
+		const { address, tags, categories, phone, website } = this.state
+		const link = (website !== 'N/A') ? 'https://' + website : ''
 
  		return(
 			<div className='venue-spot'>
@@ -57,8 +66,22 @@ class VenueSpot extends React.Component {
 							<Label key={i}> { tag } </Label>
 						)}
 					</Label.Group>
-					<Icon name='marker' />
-					<i> { address } </i>
+				</div>
+				<div className='venue-contact'>
+					<List> 
+						<List.Item>
+							<List.Icon name='marker' />
+							<List.Content>  { address } </List.Content>
+						</List.Item>
+						<List.Item>
+							<List.Icon name='phone' />
+							<List.Content> { phone } </List.Content>
+						</List.Item>
+						<List.Item>
+							<List.Icon name='external' />
+							<List.Content> <a href={link}> {website} </a> </List.Content>
+						</List.Item>
+					</List>
 				</div>
 			</div>
 		)
