@@ -1,5 +1,6 @@
 import React from 'react'
-import { Header } from 'semantic-ui-react'
+import { isEqual } from 'lodash'
+import { Header, Label, Icon } from 'semantic-ui-react'
 import { getInfo } from '../../wofMethods'
 
 class VenueSpot extends React.Component {
@@ -9,11 +10,17 @@ class VenueSpot extends React.Component {
 		this.state = {
 			address: '',
 			tags: [],
-			categories: null,
+			categories: {},
 			phone: ''
 		}
 
 		const endpoint = getInfo(this.props.id)
+		this.makeRequest(endpoint)
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (isEqual(nextProps.id, this.props.id)) { return }
+		const endpoint = getInfo(nextProps.id)
 		this.makeRequest(endpoint)
 	}
 
@@ -40,6 +47,17 @@ class VenueSpot extends React.Component {
 			<div className='venue-spot'>
 				<div className='venue-details'>
 					<Header as='h3'> { name } </Header>
+					<Label.Group className='categories-tags'>
+						{Object.keys(categories).map((key, i) => {
+							if (categories[key] !== '') {
+								return <Label key={i}> { categories[key] } </Label>
+							}
+						})}
+						{tags.map((tag,i) => 
+							<Label key={i}> { tag } </Label>
+						)}
+					</Label.Group>
+					<Icon name='marker' />
 					<i> { address } </i>
 				</div>
 			</div>
