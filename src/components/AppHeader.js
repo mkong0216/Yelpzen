@@ -7,7 +7,7 @@ import NearSearchBar from './Searchbars/NearSearchBar'
 const AppHeader = (props) => {
 	return (
 		<div className={props.className}>
-			<Link to={`/local/`}>
+			<Link to={`/local`}>
 				<Header as='h1'> Yelpzen </Header>
 			</Link>
 			<div className='search-bars'>

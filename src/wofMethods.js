@@ -33,7 +33,8 @@ export function getHierarchies(latlng) {
 			const label = hierarchies[0].neighbourhood['wof:name'] + ', ' + hierarchies[0].locality['wof:name']
 			const neighbourhood = {
 				name: hierarchies[0].neighbourhood['wof:name'],
-				id: hierarchies[0].neighbourhood['wof:id']
+				id: hierarchies[0].neighbourhood['wof:id'],
+				placetype: 'neighbourhood_id'
 			}
 			store.dispatch(setLocality(label, neighbourhood))
 			store.dispatch(setMapView(latlng, 10))

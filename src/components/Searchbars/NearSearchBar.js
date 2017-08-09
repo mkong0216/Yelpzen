@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import Autosuggest from 'react-autosuggest'
 import { Icon } from 'semantic-ui-react'
 import { throttle } from 'lodash'
+import { getPlacetype } from '../../wofMethods'
 import { setMapView } from '../../store/actions/map'
 import { setLocality } from '../../store/actions/locality'
 import './Searchbar.css'
@@ -22,7 +23,8 @@ class NearSearchBar extends React.Component {
 		this.state = {
 			value: '',
 			suggestions: [],
-			placeholder: 'Enter a city, state'
+			placeholder: 'Enter a city, state',
+			placetype: ''
 		}
 
 		this.throttleMakeRequest = throttle(this.makeRequest, 200)
@@ -38,6 +40,7 @@ class NearSearchBar extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this)
 		this.search = this.search.bind(this)
 		this.autocomplete = this.autocomplete.bind(this)
+		this.getPlacetype = this.getPlacetype.bind(this)
 
 	}
 
@@ -67,14 +70,32 @@ class NearSearchBar extends React.Component {
 
 	// Will be called every time suggestion is selected via mouse or keyboard
 	onSuggestionSelected (event, {suggestion, suggestionValue, suggestionIndex, sectionIndex, method}) {
+		console.log(suggestion)
 		const latlng = [suggestion.geometry.coordinates[1], suggestion.geometry.coordinates[0]]
 		const label = suggestion.properties.label
+		const source_id = suggestion.properties.source_id
+		this.getPlacetype(source_id)
 		const source = {
 			name: suggestion.properties.name,
-			id: Number(suggestion.properties['source_id'])
+			id: Number(source_id),
+			placetype: this.state.placetype
 		}
+		console.log(source)
 		this.props.setMapView(latlng, 10)
 		this.props.setLocality(label, source)
+	}
+
+	// Find out what placetype id is 
+	getPlacetype(id) {
+		const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getInfo&api_key=${this.props.config.mapzen.apiKey}&id=${id}`
+		window.fetch(endpoint)
+			.then(response => response.json())
+			.then((results) => {
+				console.log(results)
+				this.setState({
+					placetype: results.place['wof:placetype'] + '_id'
+				})
+			})
 	}
 
 	renderSuggestion (suggestion, {query, isHighlighted}) {

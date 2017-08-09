@@ -100,7 +100,7 @@ class FindSearchBar extends React.Component {
 	search (query) {
 		// Store lat/lng of locality to use in this url  (focus.point.lat, focus.point.lon)
   		//const endpoint = `https://search.mapzen.com/v1/autocomplete?text=${query}&api_key=${this.props.config.mapzen.apiKey}&focus.point.lat=${this.props.coordinates[0]}&focus.point.lon=${this.props.coordinates[1]}&layers=venue`
-  		const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.search&api_key=${this.props.config.mapzen.apiKey}&q=${query}&neighbourhood_id=${this.props.source.id}&layers=venue&extras=geom:latitude,geom:longitude,sg:,addr:full,wof:tags`
+  		const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.search&api_key=${this.props.config.mapzen.apiKey}&q=${query}&${this.props.source.placetype}=${this.props.source.id}&layers=venue&extras=geom:latitude,geom:longitude,sg:,addr:full,wof:tags`
   		this.throttleMakeRequest(endpoint)
 	}
 
