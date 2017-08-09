@@ -1,5 +1,9 @@
 import React from 'react'
 import { Header, Rating, Form, Label, TextArea, Input } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { addReview } from '../../store/actions/reviews'
+
 
 class ReviewForm extends React.Component {
 	constructor(props) {
@@ -13,17 +17,19 @@ class ReviewForm extends React.Component {
 		const review = {
 			name: this.name.inputRef.value,
 			rating: this.rating.state.rating,
-			comment: this.comment.ref.value
+			comment: this.comment.ref.value,
+			date: new Date()
 		}
-		console.log(this.name)
-		console.log(review)
+		this.props.addReview(this.props.id, review)
+		event.target.reset()
 	}
+
 	render() {
 		return (
 			<div className='user-review'>
 				<Header as='h3'> Add Your Review </Header>
 				<div className='review-form'>
-					<Form onSubmit={this.handleSubmit} >
+					<Form onSubmit={this.handleSubmit} ref={(input) => { this.reviewForm = input }}>
 						<Form.Field className='name'>
 							<Input ref={(input) => { this.name = input }} label='Name: ' placeholder='Your name...' />
 						</Form.Field>
@@ -43,4 +49,12 @@ class ReviewForm extends React.Component {
 	}
 } 
 
-export default ReviewForm
+function mapStateToProps(state) {
+	return {}
+}
+
+function mapDispatchToProps(dispatch) {
+	return bindActionCreators({addReview}, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ReviewForm)

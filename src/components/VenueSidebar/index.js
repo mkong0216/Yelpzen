@@ -12,7 +12,7 @@ class VenueSidebar extends React.Component {
 					<VenueSpot id={this.props.match.params.venueID} name={this.props.match.params.venueName} />
 				</Segment> 
 				<Segment>
-					<ReviewForm id={this.props.match.params.venueId} name={this.props.match.params.venueName} />
+					<ReviewForm id={this.props.match.params.venueID} name={this.props.match.params.venueName} />
 				</Segment>
 			</div>
 		)
