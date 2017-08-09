@@ -21,6 +21,7 @@ class ReviewForm extends React.Component {
 			date: new Date()
 		}
 		this.props.addReview(this.props.id, review)
+		this.rating.setState({ rating: 0 })
 		event.target.reset()
 	}
 

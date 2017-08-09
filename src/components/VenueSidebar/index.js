@@ -1,18 +1,23 @@
 import React from 'react'
 import { Segment } from 'semantic-ui-react'
 import VenueSpot from './VenueSpot'
+import VenueReviews from './VenueReviews'
 import ReviewForm from './ReviewForm'
 import './VenueSidebar.css'
 
 class VenueSidebar extends React.Component {
 	render() {
+		const { venueID, venueName } = this.props.match.params
 		return (
 			<div className={this.props.className + ' venue-sidebar'}>
 				<Segment>
-					<VenueSpot id={this.props.match.params.venueID} name={this.props.match.params.venueName} />
+					<VenueSpot id={venueID} name={venueName} />
 				</Segment> 
 				<Segment>
-					<ReviewForm id={this.props.match.params.venueID} name={this.props.match.params.venueName} />
+					<VenueReviews id={venueID} name={venueName} />
+				</Segment>
+				<Segment>
+					<ReviewForm id={venueID} name={venueName} />
 				</Segment>
 			</div>
 		)

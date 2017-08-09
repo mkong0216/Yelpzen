@@ -18,3 +18,20 @@
 	position: absolute;
 	margin-left: 10px;
 }
+
+.user-info {
+	position: relative;
+}
+
+.review-date {
+	position: absolute;
+	right: 0;
+}
+
+.review-info {
+	margin: 5px 0px;
+}
+
+.ui.disabled.rating {
+	margin: 5px 0px;
+}
