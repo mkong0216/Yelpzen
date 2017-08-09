@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { Link } from 'react-router-dom'
 import Autosuggest from 'react-autosuggest'
 import { Icon } from 'semantic-ui-react'
 import { throttle } from 'lodash'
@@ -89,9 +90,11 @@ class NearSearchBar extends React.Component {
 	  	}
 
 	  	return (
-	  		<div className="map-search-suggestion-item">
-	      		<Icon name="map pin" />{highlighted}
-	    	</div>
+	  		<Link to={`/local/${suggestion.properties.name}`}>
+		  		<div className="map-search-suggestion-item">
+		      		<Icon name="map pin" />{highlighted}
+		    	</div>
+		    </Link>
 	  	)
 	}
 
