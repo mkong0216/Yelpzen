@@ -1,6 +1,9 @@
 import React from 'react'
 import { isEqual } from 'lodash'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { Header, Label, List } from 'semantic-ui-react'
+import { setMapView } from '../../store/actions/map'
 import { getInfo } from '../../wofMethods'
 
 class VenueSpot extends React.Component {
@@ -30,7 +33,8 @@ class VenueSpot extends React.Component {
 		window.fetch(endpoint)
 			.then(response => response.json())
 			.then((results) => {
-				console.log(results.place)
+				const latlng = [results.place['geom:latitude'], results.place['geom:longitude']]
+				this.props.setMapView(latlng, 15)
 				const phone = results.place['sg:phone']
 				const website = results.place['sg:website']
 				this.setState({
@@ -88,4 +92,12 @@ class VenueSpot extends React.Component {
 	}
 }
 
-export default VenueSpot
+function mapStateToProps(state) {
+	return {}
+}
+
+function mapDispatchToProps(dispatch) {
+	return bindActionCreators({setMapView}, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(VenueSpot)

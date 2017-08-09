@@ -1,10 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import Autosuggest from 'react-autosuggest'
 import { Icon } from 'semantic-ui-react'
 import { throttle } from 'lodash'
+import { setMapView } from '../../store/actions/map'
 import './Searchbar.css'
 
 class FindSearchBar extends React.Component {
@@ -60,7 +62,10 @@ class FindSearchBar extends React.Component {
 
 	// Will be called every time suggestion is selected via mouse or keyboard
 	onSuggestionSelected (event, {suggestion, suggestionValue, suggestionIndex, sectionIndex, method}) {
-		console.log(suggestion)
+		const latlng = [suggestion['geom:latitude'], suggestion['geom:longitude']]
+		this.props.setMapView(latlng, 15)
+		this.setState({ value: '' })
+		this.onSuggestionsClearRequested()
 	}
 
 	renderSuggestion (suggestion, {query, isHighlighted}) {
@@ -178,4 +183,8 @@ function mapStateToProps(state) {
 	}
 }
 
-export default connect(mapStateToProps)(FindSearchBar)
+function mapDispatchToProps(dispatch) {
+	return bindActionCreators({setMapView}, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(FindSearchBar)
