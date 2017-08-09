@@ -1,5 +1,6 @@
 import React from 'react'
 import { Segment } from 'semantic-ui-react'
+import { BrowserRouter, Route } from 'react-router-dom'
 import LocalSpots from './LocalSpots'
 import './Sidebar.css'
 

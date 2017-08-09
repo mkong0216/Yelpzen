@@ -1,6 +1,6 @@
 import React from 'react'
 import { isEqual } from 'lodash'
-import { Header, Label, Icon, List, Button, Input } from 'semantic-ui-react'
+import { Header, Label, List } from 'semantic-ui-react'
 import { getInfo } from '../../wofMethods'
 
 class VenueSpot extends React.Component {

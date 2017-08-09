@@ -23,7 +23,7 @@ class FindSearchBar extends React.Component {
 			placeholder: 'Search for a restaurant, salon, etc.'
 		}
 
-		this.throttleMakeRequest = throttle(this.makeRequest)
+		this.throttleMakeRequest = throttle(this.makeRequest, 200)
 		this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this)
 		this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this)
 		this.getSuggestionValue = this.getSuggestionValue.bind(this)
