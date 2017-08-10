@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import Autosuggest from 'react-autosuggest'
 import { Icon } from 'semantic-ui-react'
-import { throttle } from 'lodash'
+import { throttle, isEqual } from 'lodash'
 import { setMapView } from '../../store/actions/map'
+import { getInfo } from '../../wofMethods'
 import './Searchbar.css'
 
 class FindSearchBar extends React.Component {
@@ -22,10 +23,11 @@ class FindSearchBar extends React.Component {
 		this.state = {
 			value: '',
 			suggestions: [],
-			placeholder: 'Search for a restaurant, salon, etc.'
+			placeholder: 'Search for a restaurant, salon, etc.',
+			placetype: ''
 		}
 
-		this.throttleMakeRequest = throttle(this.makeRequest, 200)
+		this.throttleMakeRequest = throttle(this.makeRequest, 250)
 		this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this)
 		this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this)
 		this.getSuggestionValue = this.getSuggestionValue.bind(this)
@@ -38,13 +40,31 @@ class FindSearchBar extends React.Component {
 		this.renderClearButton = this.renderClearButton.bind(this)
 		this.handleSubmit = this.handleSubmit.bind(this)
 		this.search = this.search.bind(this)
+		this.getPlacetype = this.getPlacetype.bind(this)
 	}
 
+
+	getPlacetype(id) {
+		const endpoint = getInfo(id)
+		window.fetch(endpoint) 
+  				.then(response => response.json())
+  				.then((results) => {
+  					const placetype = results.place['wof:placetype'] + '_id'
+  					this.setState({
+  						placetype: placetype
+  					})
+  			})
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (isEqual(this.props.source, nextProps.source)) { return }
+		this.getPlacetype(nextProps.source.id)
+	}
 
 	// Will be called every time you need to recalculate suggestions
 	onSuggestionsFetchRequested ({value}) {
 		if (value.length >= 2) {
-	    	this.search(value)
+			this.search(value)
 	    }
 	}
 
@@ -69,6 +89,7 @@ class FindSearchBar extends React.Component {
 	}
 
 	renderSuggestion (suggestion, {query, isHighlighted}) {
+		console.log(suggestion)
 	  	const label = suggestion['wof:name']
 	  	const cityState = suggestion['sg:city'] + ', ' + suggestion['sg:province']
 	  	const id = suggestion['wof:id']
@@ -100,7 +121,8 @@ class FindSearchBar extends React.Component {
 	search (query) {
 		// Store lat/lng of locality to use in this url  (focus.point.lat, focus.point.lon)
   		//const endpoint = `https://search.mapzen.com/v1/autocomplete?text=${query}&api_key=${this.props.config.mapzen.apiKey}&focus.point.lat=${this.props.coordinates[0]}&focus.point.lon=${this.props.coordinates[1]}&layers=venue`
-  		const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.search&api_key=${this.props.config.mapzen.apiKey}&q=${query}&${this.props.source.placetype}=${this.props.source.id}&layers=venue&extras=geom:latitude,geom:longitude,sg:,addr:full,wof:tags`
+  		const placetype = this.state.placetype
+  		const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.search&api_key=${this.props.config.mapzen.apiKey}&q=${query}&${placetype}=${this.props.source.id}&placetype=venue&per_page=10&extras=geom:latitude,geom:longitude,sg:,addr:full,wof:tags`
   		this.throttleMakeRequest(endpoint)
 	}
 

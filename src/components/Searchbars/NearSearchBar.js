@@ -40,8 +40,6 @@ class NearSearchBar extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this)
 		this.search = this.search.bind(this)
 		this.autocomplete = this.autocomplete.bind(this)
-		this.getPlacetype = this.getPlacetype.bind(this)
-
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -70,32 +68,15 @@ class NearSearchBar extends React.Component {
 
 	// Will be called every time suggestion is selected via mouse or keyboard
 	onSuggestionSelected (event, {suggestion, suggestionValue, suggestionIndex, sectionIndex, method}) {
-		console.log(suggestion)
 		const latlng = [suggestion.geometry.coordinates[1], suggestion.geometry.coordinates[0]]
 		const label = suggestion.properties.label
 		const source_id = suggestion.properties.source_id
-		this.getPlacetype(source_id)
 		const source = {
 			name: suggestion.properties.name,
 			id: Number(source_id),
-			placetype: this.state.placetype
 		}
-		console.log(source)
 		this.props.setMapView(latlng, 10)
 		this.props.setLocality(label, source)
-	}
-
-	// Find out what placetype id is 
-	getPlacetype(id) {
-		const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getInfo&api_key=${this.props.config.mapzen.apiKey}&id=${id}`
-		window.fetch(endpoint)
-			.then(response => response.json())
-			.then((results) => {
-				console.log(results)
-				this.setState({
-					placetype: results.place['wof:placetype'] + '_id'
-				})
-			})
 	}
 
 	renderSuggestion (suggestion, {query, isHighlighted}) {
@@ -133,7 +114,7 @@ class NearSearchBar extends React.Component {
 
 	// Makes search request based on what user has entered
 	search (query) {
-  		const endpoint = `https://search.mapzen.com/v1/search?text=${query}&api_key=${this.props.config.mapzen.apiKey}&layers=coarse`
+  		const endpoint = `https://search.mapzen.com/v1/search?text=${query}&api_key=${this.props.config.mapzen.apiKey}&layers=coarse&sources=wof`
   		this.throttleMakeRequest(endpoint)
 	}
 
