@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Header, Label, List } from 'semantic-ui-react'
 import { setMapView } from '../../store/actions/map'
+import { addWaypoints } from '../../store/actions/markers'
 import { getInfo } from '../../wofMethods'
 
 class VenueSpot extends React.Component {
@@ -21,6 +22,8 @@ class VenueSpot extends React.Component {
 
 		const endpoint = getInfo(this.props.id)
 		this.makeRequest(endpoint)
+
+		this.makeRequest = this.makeRequest.bind(this)
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -44,6 +47,11 @@ class VenueSpot extends React.Component {
 					phone: (phone.length > 10) ? phone : 'N/A',
 					website: (website !== undefined) ? website : 'N/A'
 				})
+				const waypoint = {
+					latlng: latlng,
+					label: this.props.name
+				}
+				this.props.addWaypoints([waypoint])
 			})
 	}
 
@@ -64,7 +72,7 @@ class VenueSpot extends React.Component {
 						{Object.keys(categories).map((key, i) => {
 							if (categories[key] !== '') {
 								return <Label key={i}> { categories[key] } </Label>
-							}
+							} return null
 						})}
 						{tags.map((tag,i) => 
 							<Label key={i}> { tag } </Label>
@@ -93,11 +101,13 @@ class VenueSpot extends React.Component {
 }
 
 function mapStateToProps(state) {
-	return {}
+	return {
+		coordinates: state.map.coordinates
+	}
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({setMapView}, dispatch)
+	return bindActionCreators({setMapView, addWaypoints}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(VenueSpot)

@@ -1,9 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { Link } from 'react-router-dom'
+import L from 'leaflet'
 import { Header, Loader, Dimmer, List, Label } from 'semantic-ui-react'
 import { isEqual } from 'lodash'
 import { getDescendants, compare } from '../../wofMethods'
+import { addWaypoints } from '../../store/actions/markers'
 
 class LocalSpots extends React.Component {
 	constructor(props) {
@@ -21,8 +24,8 @@ class LocalSpots extends React.Component {
 	componentWillReceiveProps(nextProps) {
 		if (isEqual(this.props.source, nextProps.source)) { return }
 		console.log('receiving new props')
-		const neighbourhood_id = nextProps.source.id
-		const endpoint = getDescendants(neighbourhood_id)
+		const id = nextProps.source.id
+		const endpoint = getDescendants(id)
 		this.makeRequest(endpoint)
 	}
 
@@ -37,7 +40,25 @@ class LocalSpots extends React.Component {
 					localSpots: localSpots,
 					isLoading: false
 				})
+				this.addWaypoints(this.state.localSpots)
 			})
+	}
+
+	addWaypoints(localSpots) {
+		const waypoints = []
+		localSpots.map((key, i) => {
+			const point = L.latLng(
+				Number(key['geom:latitude']),
+				Number(key['geom:longitude'])
+			)
+			const name = key['wof:name']
+			const waypoint = {
+				latlng: point,
+				label: name
+			}
+			return waypoints.push(waypoint)
+		})
+		this.props.addWaypoints(waypoints)
 	}
 
 	renderLocalSpot(venue, i) {
@@ -61,7 +82,6 @@ class LocalSpots extends React.Component {
 		)
 	}
 	render() {
-		console.log('mounting local spots')
 		const venues = this.state.localSpots
 		return(
 			<div className='local-spots'>
@@ -82,4 +102,8 @@ function mapStateToProps(state) {
 	}
 }
 
-export default connect(mapStateToProps)(LocalSpots)
+function mapDispatchToProps(dispatch) {
+	return bindActionCreators({addWaypoints}, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LocalSpots)

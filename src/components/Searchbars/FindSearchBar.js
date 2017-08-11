@@ -89,7 +89,6 @@ class FindSearchBar extends React.Component {
 	}
 
 	renderSuggestion (suggestion, {query, isHighlighted}) {
-		console.log(suggestion)
 	  	const label = suggestion['wof:name']
 	  	const cityState = suggestion['sg:city'] + ', ' + suggestion['sg:province']
 	  	const id = suggestion['wof:id']

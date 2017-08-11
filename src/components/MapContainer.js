@@ -13,11 +13,7 @@ class MapContainer extends React.Component {
 		const { config, map } = this.props
 		return(
 			<div className={this.props.className}>
-				<Map 
-					config={config}
-					center={map.coordinates}
-					zoom={map.zoom}
-				/>
+				<Map config={config} center={map.coordinates} zoom={map.zoom} />
 			</div>
 		)
 	}
@@ -25,7 +21,7 @@ class MapContainer extends React.Component {
 
 function mapStateToProps(state) {
 	return {
-		map: state.map
+		map: state.map,
 	}
 }
 

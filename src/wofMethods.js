@@ -56,8 +56,8 @@ export function compare(a, b) {
 		'Recreation': 2,
 		'Shopping': 2
 	}
-	const categoryA = a['sg:classifiers'][0].category
-	const categoryB = b['sg:classifiers'][0].category
+	const categoryA = (a['sg:classifiers'].length === 0) ? '' : a['sg:classifiers'][0].category 
+	const categoryB = (b['sg:classifiers'].length === 0) ? '' : b['sg:classifiers'][0].category 
 	if (!(categoryA in categories)) { 
 		categories[categoryA] = 3
 	}
@@ -68,7 +68,7 @@ export function compare(a, b) {
 }
 
 export function getDescendants(id) {
-	const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getDescendants&api_key=${config.mapzen.apiKey}&id=${id}&placetype=venue&iscurrent=1&exclude=nullisland&extras=wof:tags,addr:,sg:classifiers`
+	const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getDescendants&api_key=${config.mapzen.apiKey}&id=${id}&placetype=venue&iscurrent=1&exclude=nullisland&extras=wof:tags,addr:,sg:classifiers,geom:latitude,geom:longitude`
 	return endpoint
 }
 
