@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import Autosuggest from 'react-autosuggest'
 import { Icon } from 'semantic-ui-react'
 import { throttle, isEqual } from 'lodash'
-import { setMapView } from '../../store/actions/map'
+import { setMapView, clearDirections } from '../../store/actions/map'
 import { getInfo } from '../../wofMethods'
 import './Searchbar.css'
 
@@ -86,6 +86,8 @@ class FindSearchBar extends React.Component {
 		this.props.setMapView(latlng, 15)
 		this.setState({ value: '' })
 		this.onSuggestionsClearRequested()
+		this.props.clearDirections()
+
 	}
 
 	renderSuggestion (suggestion, {query, isHighlighted}) {
@@ -205,7 +207,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({setMapView}, dispatch)
+	return bindActionCreators({setMapView, clearDirections}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FindSearchBar)

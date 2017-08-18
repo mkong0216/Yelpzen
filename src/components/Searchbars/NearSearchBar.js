@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import Autosuggest from 'react-autosuggest'
 import { Icon } from 'semantic-ui-react'
 import { throttle } from 'lodash'
-import { setMapView } from '../../store/actions/map'
+import { setMapView, clearDirections } from '../../store/actions/map'
 import { setLocality } from '../../store/actions/locality'
 import './Searchbar.css'
 
@@ -76,6 +76,7 @@ class NearSearchBar extends React.Component {
 		}
 		this.props.setMapView(latlng, 10)
 		this.props.setLocality(label, source)
+		this.props.clearDirections()
 	}
 
 	renderSuggestion (suggestion, {query, isHighlighted}) {
@@ -184,7 +185,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({setLocality, setMapView}, dispatch)
+	return bindActionCreators({setLocality, setMapView, clearDirections}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NearSearchBar)

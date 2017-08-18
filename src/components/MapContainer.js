@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Map from './Map'
+import Directions from './Map/Directions'
 
 class MapContainer extends React.Component {
 	static propTypes = {
@@ -14,6 +15,7 @@ class MapContainer extends React.Component {
 		return(
 			<div className={this.props.className}>
 				<Map config={config} center={map.coordinates} zoom={map.zoom} />
+				<Directions />
 			</div>
 		)
 	}

@@ -1,9 +1,11 @@
 import config from '../../config'
-import { SET_MAP_VIEW } from '../actions'
+import { SET_MAP_VIEW, DISPLAY_DIRECTIONS, CLEAR_DIRECTIONS } from '../actions'
 
 const initialState = {
 	coordinates: config.map.center,
-	zoom: config.map.zoom
+	zoom: config.map.zoom,
+	directions: [],
+	location: ''
 }
 
 const map = (state = initialState, action) => {
@@ -14,6 +16,18 @@ const map = (state = initialState, action) => {
 				...state,
 				coordinates: action.latlng,
 				zoom: action.zoom
+			}
+		case DISPLAY_DIRECTIONS:
+			return {
+				...state,
+				directions: action.directions,
+				location: action.name
+			}
+		case CLEAR_DIRECTIONS:
+			return {
+				...state,
+				directions: [],
+				location: ''
 			}
 		default:
 			return state

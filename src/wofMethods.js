@@ -1,6 +1,6 @@
 import config from './config'
 import store from './store'
-import { setLocality } from './store/actions/locality'
+import { setLocality, setGeolocation } from './store/actions/locality'
 import { setMapView } from './store/actions/map'
 
 export function geolocateMe() {
@@ -37,6 +37,7 @@ export function getHierarchies(latlng) {
 			}
 			store.dispatch(setLocality(label, neighbourhood))
 			store.dispatch(setMapView(latlng, 10))
+			store.dispatch(setGeolocation(latlng, label))
 		})
 }
 
