@@ -17,7 +17,7 @@ class App extends Component {
         <Provider store={store}>
           <div className='App'>
             <AppHeader className='App-header' config={config} />
-            <Route path='/' render={() => <Sidebar className='sidebar-container' />} />
+            <Route path = '/' render={() => <Sidebar className='sidebar-container' /> } />
             <Route exact path = '/venue/:venueName/:venueID' render={(match) => <VenueSidebar className='sidebar-container' {...match} /> }/>
             <MapContainer className='map-container' config={config} />
           </div>

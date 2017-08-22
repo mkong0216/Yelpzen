@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import PropTypes from 'prop-types'
 import { List, Icon } from 'semantic-ui-react'
 import polyline from '@mapbox/polyline'
 import L from 'leaflet'
@@ -12,6 +13,16 @@ import { search } from '../../../wofMethods'
 import './Directions.css'
 
 class Directions extends React.Component {
+	static propTypes = {
+		location: PropTypes.string,
+		addWaypoints: PropTypes.func.isRequired,
+		markers: PropTypes.array,
+		coordinates: PropTypes.array,
+		geolocation: PropTypes.object,
+		displayDirections: PropTypes.func.isRequired,
+		directions: PropTypes.array
+	}
+	
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -67,7 +78,7 @@ class Directions extends React.Component {
 		} else {
 			return (
 				<List.Header className='point'>
-					{ this.state.startInput === '' ? this.props.geolocation : this.state.startInput }
+					{ this.state.startInput === '' ? this.props.geolocation.label : this.state.startInput }
 					<Icon name='edit' className='edit' onClick={this.handleClick} />
 				</List.Header>
 			)
@@ -124,7 +135,7 @@ class Directions extends React.Component {
 function mapStateToProps(state) {
 	return {
 		directions: state.map.directions,
-		geolocation: state.locality.geoLabel,
+		geolocation: state.locality.geolocation,
 		location: state.map.location,
 		coordinates: state.map.coordinates,
 		markers: state.markers.waypoints

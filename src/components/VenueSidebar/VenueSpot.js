@@ -2,6 +2,7 @@ import React from 'react'
 import { isEqual } from 'lodash'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import PropTypes from 'prop-types'
 import L from 'leaflet'
 import { Header, Label, List, Button } from 'semantic-ui-react'
 import polyline from '@mapbox/polyline'
@@ -11,6 +12,16 @@ import { addWaypoints } from '../../store/actions/markers'
 import { getInfo } from '../../wofMethods'
 
 class VenueSpot extends React.Component {
+	static propTypes = {
+		id: PropTypes.string,
+		setMapView: PropTypes.func.isRequired,
+		displayDirections: PropTypes.func.isRequired,
+		addWaypoints: PropTypes.func.isRequired,
+		name: PropTypes.string,
+		coordinates: PropTypes.array,
+		geolocation: PropTypes.object
+	}
+	
 	constructor(props) {
 		super(props)
 
@@ -61,7 +72,7 @@ class VenueSpot extends React.Component {
 	handleClick(event) {
 		const { coordinates, geolocation, name } = this.props
 		const start = {
-			latlng: L.latLng(geolocation[0], geolocation[1]),
+			latlng: L.latLng(geolocation.latlng[0], geolocation.latlng[1]),
 			label: 'You are here'
 		}
 

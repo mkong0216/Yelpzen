@@ -7,7 +7,7 @@ import { geolocateMe } from './wofMethods'
 import './index.css'
 import 'semantic-ui-css/semantic.min.css'
 
-geolocateMe() 
+geolocateMe()
 
 ReactDOM.render(<App />, document.getElementById('root'))
 registerServiceWorker()

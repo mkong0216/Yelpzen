@@ -1,15 +1,23 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import L from 'leaflet'
 import { Header, Loader, Dimmer, List, Label } from 'semantic-ui-react'
 import { isEqual } from 'lodash'
 import { getDescendants, compare } from '../../wofMethods'
 import { addWaypoints } from '../../store/actions/markers'
-import { clearDirections } from '../../store/actions/map'
+import { setMapView, clearDirections } from '../../store/actions/map'
 
 class LocalSpots extends React.Component {
+	static propTypes = {
+		source: PropTypes.object,
+		addWaypoints: PropTypes.func.isRequired,
+		setMapView: PropTypes.func.isRequired,
+		clearDirections: PropTypes.func.isRequired
+	}
+	
 	constructor(props) {
 		super(props)
 
@@ -103,7 +111,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({addWaypoints, clearDirections}, dispatch)
+	return bindActionCreators({addWaypoints, clearDirections, setMapView}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LocalSpots)

@@ -18,7 +18,7 @@ export function error() {
 }
 
 export function getHierarchies(latlng) {
-	const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getHierarchiesByLatLon&api_key=${config.mapzen.apiKey}&latitude=${latlng[0]}&longitude=${latlng[1]}&placetype=neighbourhood&spr=1&extras=edtf:deprecated`
+	const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getHierarchiesByLatLon&api_key=${config.mapzen.apiKey}&latitude=${latlng[0]}&longitude=${latlng[1]}&placetype=neighbourhood&spr=1&extras=edtf:deprecated,geom:`
 	window.fetch(endpoint)
 		.then(response => response.json())
 		.then((results) => {
@@ -34,10 +34,11 @@ export function getHierarchies(latlng) {
 			const neighbourhood = {
 				name: hierarchies[0].neighbourhood['wof:name'],
 				id: hierarchies[0].neighbourhood['wof:id'],
+				latlng: [hierarchies[0].neighbourhood['geom:latitude'], hierarchies[0].neighbourhood['geom:longitude']]
 			}
 			store.dispatch(setLocality(label, neighbourhood))
 			store.dispatch(setMapView(latlng, 12))
-			store.dispatch(setGeolocation(latlng, label))
+			store.dispatch(setGeolocation({latlng: latlng, label: label}))
 		})
 }
 

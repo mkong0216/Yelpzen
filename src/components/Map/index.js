@@ -18,7 +18,9 @@ class Map extends React.Component {
 		className: PropTypes.string,
 		center: PropTypes.array,
 		zoom: PropTypes.number,
-		config: PropTypes.object.isRequired
+		config: PropTypes.object.isRequired,
+		waypoints: PropTypes.array,
+		segments: PropTypes.array
 	}
 
 	constructor(props) {

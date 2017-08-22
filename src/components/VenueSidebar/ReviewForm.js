@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Header, Rating, Form, Label, TextArea, Input } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -6,6 +7,11 @@ import { addReview } from '../../store/actions/reviews'
 
 
 class ReviewForm extends React.Component {
+	static propTypes = {
+		addReview: PropTypes.func.isRequired,
+		id: PropTypes.string.isRequired
+	}
+
 	constructor(props) {
 		super(props)
 

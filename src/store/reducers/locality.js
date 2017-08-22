@@ -3,8 +3,7 @@ import { SET_LOCALITY, SET_GEOLOCATION } from '../actions'
 const initialState = {
 	label: '',
 	source: null,
-	geolocation: [],
-	geoLabel: ''
+	geolocation: {}
 }
 
 const locality = (state = initialState, action) => {
@@ -18,8 +17,7 @@ const locality = (state = initialState, action) => {
 		case SET_GEOLOCATION:
 			return {
 				...state,
-				geolocation: action.geolocation,
-				geoLabel: action.label
+				geolocation: action.geolocation
 			}
 		default:
 			return state

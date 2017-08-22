@@ -14,6 +14,10 @@ class NearSearchBar extends React.Component {
 	static propTypes = {
 		className: PropTypes.string,
 		config: PropTypes.object.isRequired,
+		label: PropTypes.string,
+		setMapView: PropTypes.func.isRequired, 
+		setLocality: PropTypes.func.isRequired,
+		clearDirections: PropTypes.func.isRequired
 	}
 
 	constructor(props) {
@@ -73,6 +77,7 @@ class NearSearchBar extends React.Component {
 		const source = {
 			name: suggestion.properties.name,
 			id: Number(source_id),
+			latlng: latlng
 		}
 		this.props.setMapView(latlng, 10)
 		this.props.setLocality(label, source)

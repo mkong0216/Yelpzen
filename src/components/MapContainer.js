@@ -7,7 +7,8 @@ import Directions from './Map/Directions'
 class MapContainer extends React.Component {
 	static propTypes = {
 		className: PropTypes.string,
-		config: PropTypes.object.isRequired
+		config: PropTypes.object.isRequired,
+		map: PropTypes.object
 	}
 
 	render() {

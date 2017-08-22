@@ -14,7 +14,8 @@ class FindSearchBar extends React.Component {
 	static propTypes = {
 		className: PropTypes.string,
 		config: PropTypes.object.isRequired,
-		//locality: PropTypes.array.isRequired
+		setMapView: PropTypes.func.isRequired,
+		clearDirections: PropTypes.func.isRequired
 	}
 
 	constructor(props) {
