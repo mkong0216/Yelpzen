@@ -11,3 +11,18 @@
 	overflow-y: scroll;
 	border: 2px solid rgba(0,0,0,0.2);
 }
+
+.header.point {
+	font-size: 14px;
+}
+
+i.icon.edit {
+	padding-left: 5px;
+}
+
+input.start_input {
+	width: 190px;
+	height: 25px;
+	margin-bottom: 5px;
+	padding: 5px;
+}

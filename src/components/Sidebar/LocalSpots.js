@@ -24,7 +24,6 @@ class LocalSpots extends React.Component {
 
 	componentWillReceiveProps(nextProps) {
 		if (isEqual(this.props.source, nextProps.source)) { return }
-		console.log('receiving new props')
 		const id = nextProps.source.id
 		const endpoint = getDescendants(id)
 		this.makeRequest(endpoint)

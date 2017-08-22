@@ -5,13 +5,13 @@ const initialState = {
 	coordinates: config.map.center,
 	zoom: config.map.zoom,
 	directions: [],
-	location: ''
+	location: '',
+	segments: []
 }
 
 const map = (state = initialState, action) => {
 	switch (action.type) {
 		case SET_MAP_VIEW:
-			console.log('setting map view')
 			return {
 				...state,
 				coordinates: action.latlng,
@@ -21,13 +21,15 @@ const map = (state = initialState, action) => {
 			return {
 				...state,
 				directions: action.directions,
-				location: action.name
+				location: action.name,
+				segments: action.segments
 			}
 		case CLEAR_DIRECTIONS:
 			return {
 				...state,
 				directions: [],
-				location: ''
+				location: '',
+				segments: []
 			}
 		default:
 			return state

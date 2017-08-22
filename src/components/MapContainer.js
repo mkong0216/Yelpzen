@@ -23,7 +23,7 @@ class MapContainer extends React.Component {
 
 function mapStateToProps(state) {
 	return {
-		map: state.map,
+		map: state.map
 	}
 }
 

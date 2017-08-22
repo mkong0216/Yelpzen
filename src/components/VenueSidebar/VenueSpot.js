@@ -2,7 +2,9 @@ import React from 'react'
 import { isEqual } from 'lodash'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import L from 'leaflet'
 import { Header, Label, List, Button } from 'semantic-ui-react'
+import polyline from '@mapbox/polyline'
 import config from '../../config'
 import { setMapView, displayDirections } from '../../store/actions/map'
 import { addWaypoints } from '../../store/actions/markers'
@@ -38,7 +40,7 @@ class VenueSpot extends React.Component {
 			.then(response => response.json())
 			.then((results) => {
 				const latlng = [results.place['geom:latitude'], results.place['geom:longitude']]
-				this.props.setMapView(latlng, 15)
+				this.props.setMapView(latlng, 13)
 				const phone = results.place['sg:phone']
 				const website = results.place['sg:website']
 				this.setState({
@@ -57,27 +59,28 @@ class VenueSpot extends React.Component {
 	}
 
 	handleClick(event) {
-		const { coordinates, geolocation } = this.props
-		const endpoint = `https://valhalla.mapzen.com/route?json={"locations":[{"lat":${geolocation[0]},"lon":${geolocation[1]}},{"lat":${coordinates[0]},"lon":${coordinates[1]}}],"costing":"multimodal"}&api_key=${config.mapzen.apiKey}`
-		/*const start = {
-			latlng: geolocation,
-			label: 'Starting Point'
+		const { coordinates, geolocation, name } = this.props
+		const start = {
+			latlng: L.latLng(geolocation[0], geolocation[1]),
+			label: 'You are here'
 		}
 
 		const end = {
-			latlng: coordinates,
-			label: this.props.name
-		}*/
+			latlng: L.latLng(coordinates[0], coordinates[1]),
+			label: name
+		}
 
+		this.props.addWaypoints([start, end])
+		const endpoint = `https://valhalla.mapzen.com/route?json={"locations":[{"lat":${geolocation[0]},"lon":${geolocation[1]}},{"lat":${coordinates[0]},"lon":${coordinates[1]}}],"costing":"multimodal"}&api_key=${config.mapzen.apiKey}`
 		this.getDirections(endpoint)
-		//this.props.addWaypoints([start, end])
 	}
 
 	getDirections(endpoint) {
 		window.fetch(endpoint) 
 			.then(response => response.json())
 			.then((results) => {
-				this.props.displayDirections(results.trip.legs[0].maneuvers, this.props.name)
+				const segments = polyline.decode(results.trip.legs[0].shape, 6)
+				this.props.displayDirections(results.trip.legs[0].maneuvers, this.props.name, segments)
 			})
 	}
 

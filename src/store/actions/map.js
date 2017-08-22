@@ -8,11 +8,12 @@ export function setMapView(latlng, zoom) {
 	}
 }
 
-export function displayDirections(directions, name) {
+export function displayDirections(directions, name, segments) {
 	return {
 		type: DISPLAY_DIRECTIONS,
 		directions,
-		name
+		name,
+		segments
 	}
 }
 

@@ -36,7 +36,7 @@ export function getHierarchies(latlng) {
 				id: hierarchies[0].neighbourhood['wof:id'],
 			}
 			store.dispatch(setLocality(label, neighbourhood))
-			store.dispatch(setMapView(latlng, 10))
+			store.dispatch(setMapView(latlng, 12))
 			store.dispatch(setGeolocation(latlng, label))
 		})
 }
@@ -75,5 +75,10 @@ export function getDescendants(id) {
 
 export function getInfo(id) {
 	const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getInfo&api_key=${config.mapzen.apiKey}&id=${id}&extras=wof:tags,addr:,sg:,geom:latitude, geom:longitude`
+	return endpoint
+}
+
+export function search(query) {
+	const endpoint = `https://search.mapzen.com/v1/search?text=${query}&api_key=${config.mapzen.apiKey}`
 	return endpoint
 }
