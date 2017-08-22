@@ -35,3 +35,10 @@
 .ui.disabled.rating {
 	margin: 5px 0px;
 }
+
+.ui.fluid.button.directions-button {
+	margin-top: 10px;
+	background: #2c1e3f;
+	color: white;
+	font-family: 'Open Sans';
+}

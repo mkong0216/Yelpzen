@@ -6,6 +6,7 @@ import { Map as Leaflet } from 'react-leaflet'
 import L from 'leaflet'
 import { isEqual } from 'lodash'
 import 'leaflet-extra-markers'
+import Route from './Route'
 import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css'
 import 'leaflet/dist/leaflet.css'
 import './Map.css'
@@ -27,6 +28,7 @@ class Map extends React.Component {
 			markersLayer: new L.LayerGroup() 
 		}
 	}
+	
 	componentDidMount() {
 		const layer = Tangram.leafletLayer({
       		scene: {
@@ -44,7 +46,7 @@ class Map extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (isEqual(this.props.waypoints, nextProps.waypoints)) { return }
+		if (isEqual(this.props.waypoints, nextProps.waypoints) && isEqual(this.props.segments, nextProps.segments)) { return }
 		const layer = this.state.markersLayer
 		layer.clearLayers()
 		this.createMarkers(nextProps.waypoints)
@@ -73,7 +75,9 @@ class Map extends React.Component {
 				center={center}
 				zoom={zoom}
 				ref={(ref) => { this.map = ref}}
-			/>
+			>
+				<Route />
+			</Leaflet>
 		)
 	}
 }

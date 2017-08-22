@@ -2,8 +2,11 @@ import React from 'react'
 import { isEqual } from 'lodash'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Header, Label, List } from 'semantic-ui-react'
-import { setMapView } from '../../store/actions/map'
+import L from 'leaflet'
+import { Header, Label, List, Button } from 'semantic-ui-react'
+import polyline from '@mapbox/polyline'
+import config from '../../config'
+import { setMapView, displayDirections } from '../../store/actions/map'
 import { addWaypoints } from '../../store/actions/markers'
 import { getInfo } from '../../wofMethods'
 
@@ -16,14 +19,14 @@ class VenueSpot extends React.Component {
 			tags: [],
 			categories: {},
 			phone: '',
-			website: '',
-			addingTag: false
+			website: ''
 		}
 
 		const endpoint = getInfo(this.props.id)
 		this.makeRequest(endpoint)
 
 		this.makeRequest = this.makeRequest.bind(this)
+		this.handleClick = this.handleClick.bind(this)
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -37,7 +40,7 @@ class VenueSpot extends React.Component {
 			.then(response => response.json())
 			.then((results) => {
 				const latlng = [results.place['geom:latitude'], results.place['geom:longitude']]
-				this.props.setMapView(latlng, 15)
+				this.props.setMapView(latlng, 13)
 				const phone = results.place['sg:phone']
 				const website = results.place['sg:website']
 				this.setState({
@@ -55,8 +58,30 @@ class VenueSpot extends React.Component {
 			})
 	}
 
-	addTag(event) {
-		console.log(event)
+	handleClick(event) {
+		const { coordinates, geolocation, name } = this.props
+		const start = {
+			latlng: L.latLng(geolocation[0], geolocation[1]),
+			label: 'You are here'
+		}
+
+		const end = {
+			latlng: L.latLng(coordinates[0], coordinates[1]),
+			label: name
+		}
+
+		this.props.addWaypoints([start, end])
+		const endpoint = `https://valhalla.mapzen.com/route?json={"locations":[{"lat":${geolocation[0]},"lon":${geolocation[1]}},{"lat":${coordinates[0]},"lon":${coordinates[1]}}],"costing":"multimodal"}&api_key=${config.mapzen.apiKey}`
+		this.getDirections(endpoint)
+	}
+
+	getDirections(endpoint) {
+		window.fetch(endpoint) 
+			.then(response => response.json())
+			.then((results) => {
+				const segments = polyline.decode(results.trip.legs[0].shape, 6)
+				this.props.displayDirections(results.trip.legs[0].maneuvers, this.props.name, segments)
+			})
 	}
 
 	render() {
@@ -95,6 +120,7 @@ class VenueSpot extends React.Component {
 						</List.Item>
 					</List>
 				</div>
+				<Button content='Get Directions' compact fluid className='directions-button' onClick={this.handleClick} />
 			</div>
 		)
 	}
@@ -102,12 +128,13 @@ class VenueSpot extends React.Component {
 
 function mapStateToProps(state) {
 	return {
-		coordinates: state.map.coordinates
+		coordinates: state.map.coordinates,
+		geolocation: state.locality.geolocation
 	}
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({setMapView, addWaypoints}, dispatch)
+	return bindActionCreators({setMapView, displayDirections, addWaypoints}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(VenueSpot)

@@ -1,0 +1,28 @@
+.directions {
+	position: absolute;
+	z-index: 1000;
+	right: 0;
+	background: white;
+	border-radius: 4px;
+	margin: 15px;
+	padding: 10px;
+	width: 250px;
+	max-height: 300px;
+	overflow-y: scroll;
+	border: 2px solid rgba(0,0,0,0.2);
+}
+
+.header.point {
+	font-size: 14px;
+}
+
+i.icon.edit {
+	padding-left: 5px;
+}
+
+input.start_input {
+	width: 190px;
+	height: 25px;
+	margin-bottom: 5px;
+	padding: 5px;
+}

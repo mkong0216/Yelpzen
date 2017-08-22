@@ -7,6 +7,7 @@ import { Header, Loader, Dimmer, List, Label } from 'semantic-ui-react'
 import { isEqual } from 'lodash'
 import { getDescendants, compare } from '../../wofMethods'
 import { addWaypoints } from '../../store/actions/markers'
+import { clearDirections } from '../../store/actions/map'
 
 class LocalSpots extends React.Component {
 	constructor(props) {
@@ -23,7 +24,6 @@ class LocalSpots extends React.Component {
 
 	componentWillReceiveProps(nextProps) {
 		if (isEqual(this.props.source, nextProps.source)) { return }
-		console.log('receiving new props')
 		const id = nextProps.source.id
 		const endpoint = getDescendants(id)
 		this.makeRequest(endpoint)
@@ -68,7 +68,7 @@ class LocalSpots extends React.Component {
 					<List.Header>  
 						<List.Icon name='marker' />
 						<Link to={`/venue/${venue['wof:name']}/${venue['wof:id']}`}>
-							{ venue['wof:name'] } 
+							<span onClick={this.props.clearDirections}> { venue['wof:name'] } </span>
 						</Link>
 					</List.Header>
 					<List.Description className='address'> { venue['addr:full'] } </List.Description>
@@ -103,7 +103,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({addWaypoints}, dispatch)
+	return bindActionCreators({addWaypoints, clearDirections}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LocalSpots)
