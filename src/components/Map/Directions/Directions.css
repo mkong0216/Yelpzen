@@ -1,15 +1,36 @@
-.directions {
+.direction-container {
 	position: absolute;
 	z-index: 1000;
 	right: 0;
+	margin: 10px;
+	background: transparent;
+}
+
+.ui.divided.list.directions {
+	position: relative;
+	padding: 10px;
 	background: white;
 	border-radius: 4px;
-	margin: 15px;
-	padding: 10px;
-	width: 250px;
 	max-height: 300px;
 	overflow-y: scroll;
 	border: 2px solid rgba(0,0,0,0.2);
+	width: 250px;
+}
+
+.ui.divided.list.directions.hidden {
+	display: none;
+}
+
+.bars.icon.tab {
+	position: absolute;
+	z-index: 1001;
+	width: 30px;
+	height: 35px;
+	top: 15px;
+	left: -29px;
+	padding: 8px;
+	background: rgba(200,200,200,0.90);
+	cursor: pointer;
 }
 
 .header.point {

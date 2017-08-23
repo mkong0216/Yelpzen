@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
-import { List, Icon } from 'semantic-ui-react'
+import { List, Icon, Button } from 'semantic-ui-react'
 import polyline from '@mapbox/polyline'
 import L from 'leaflet'
 import { isEqual } from 'lodash'
@@ -27,9 +27,11 @@ class Directions extends React.Component {
 		super(props)
 		this.state = {
 			isEditing: false,
-			startInput: ''
+			startInput: '',
+			isVisible: true
 		}
 
+		this.toggleVisibility = this.toggleVisibility.bind(this)
 		this.renderStartPoint = this.renderStartPoint.bind(this)
 		this.handleClick = this.handleClick.bind(this)
 		this.handleSubmit = this.handleSubmit.bind(this)
@@ -103,6 +105,12 @@ class Directions extends React.Component {
 		)
 	}
 
+	toggleVisibility(event) {
+		const directions = event.target.nextSibling
+		this.setState({ isVisible: !this.state.isVisible })
+		directions.classList.toggle('hidden')
+	}
+
 	getDirections(endpoint) {
 		window.fetch(endpoint) 
 			.then(response => response.json())
@@ -116,8 +124,9 @@ class Directions extends React.Component {
 		const { directions } = this.props
 		if (directions.length !== 0) { 
 			return (
-				<div className='directions'>
-					<List divided>
+				<div className='direction-container'>
+					<Icon name='bars' className='tab' onClick={this.toggleVisibility} />
+					<List divided className='directions'>
 						<List.Item> 
 							<Icon name='map pin' />
 							<List.Content>
