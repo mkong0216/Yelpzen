@@ -37,7 +37,8 @@ export function getHierarchies(latlng) {
 				latlng: [hierarchies[0].neighbourhood['geom:latitude'], hierarchies[0].neighbourhood['geom:longitude']]
 			}
 			store.dispatch(setLocality(label, neighbourhood))
-			store.dispatch(setMapView(latlng, 12))
+			const pathname = window.location.pathname
+			if (!pathname.includes('venue')) { store.dispatch(setMapView(latlng, 12)) }
 			store.dispatch(setGeolocation({latlng: latlng, label: label}))
 		})
 }
@@ -48,6 +49,7 @@ export function compare(a, b) {
 		'Bars & Pubs': 1,
 		'Food & Beverages': 1,
 		'Coffee & Tea': 1,
+		'Food & Drink': 1,
 		'Deli': 1,
 		'Fast Food': 1,
 		'Cafe': 1,

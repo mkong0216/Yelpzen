@@ -14,7 +14,7 @@ import './Directions.css'
 
 class Directions extends React.Component {
 	static propTypes = {
-		location: PropTypes.string,
+		venue: PropTypes.string,
 		addWaypoints: PropTypes.func.isRequired,
 		markers: PropTypes.array,
 		coordinates: PropTypes.array,
@@ -36,10 +36,11 @@ class Directions extends React.Component {
 	}
 
 	componentWillUpdate(nextProps) {
-		if (isEqual(this.props.location, nextProps.location)) { return } 
+		if (isEqual(this.props.venue, nextProps.venue)) { return } 
 		this.setState({startInput: ''})
 	}
 
+	// Handles user changing start point for directions
 	handleSubmit(event) {
 		event.preventDefault()
 		const endpoint = search(this.refs.startInput.value)
@@ -50,6 +51,7 @@ class Directions extends React.Component {
 		window.fetch(endpoint)
 			.then(response => response.json())
 			.then((results) => {
+				// Getting the new start point's latlng
 				const label = results.features[0].properties.label
 				const startPoint = results.features[0].geometry.coordinates
 				const start = {
@@ -57,6 +59,7 @@ class Directions extends React.Component {
 					label: 'You are here'
 				}
 
+				// Adding a marker for the new start point, and removing the old one
 				this.props.addWaypoints([start, this.props.markers[1]])
 				this.setState({
 					startInput: label,
@@ -68,6 +71,8 @@ class Directions extends React.Component {
 			})
 	}
 
+	// If not editing, return a simple list header
+	// If editing, return form component
 	renderStartPoint() {
 		if (this.state.isEditing) {
 			return (
@@ -85,6 +90,7 @@ class Directions extends React.Component {
 		}
 	}
 
+	// When edit button is clicked, set isEditing to true
 	handleClick(event) {
 		this.setState({ isEditing: true })
 	}
@@ -102,7 +108,7 @@ class Directions extends React.Component {
 			.then(response => response.json())
 			.then((results) => {
 				const segments = polyline.decode(results.trip.legs[0].shape, 6)
-				this.props.displayDirections(results.trip.legs[0].maneuvers, this.props.location, segments)
+				this.props.displayDirections(results.trip.legs[0].maneuvers, segments)
 			})
 	}
 
@@ -122,7 +128,7 @@ class Directions extends React.Component {
 						<List.Item> 
 							<Icon name='map pin' />
 							<List.Content>
-								<List.Header className='point'> {this.props.location} </List.Header>
+								<List.Header className='point'> {this.props.venue} </List.Header>
 							</List.Content>
 						</List.Item>
 					</List>
@@ -136,9 +142,9 @@ function mapStateToProps(state) {
 	return {
 		directions: state.map.directions,
 		geolocation: state.locality.geolocation,
-		location: state.map.location,
 		coordinates: state.map.coordinates,
-		markers: state.markers.waypoints
+		markers: state.markers.waypoints,
+		venue: state.venue
 	}
 }
 

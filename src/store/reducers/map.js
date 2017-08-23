@@ -5,7 +5,6 @@ const initialState = {
 	coordinates: config.map.center,
 	zoom: config.map.zoom,
 	directions: [],
-	location: '',
 	segments: []
 }
 
@@ -21,14 +20,12 @@ const map = (state = initialState, action) => {
 			return {
 				...state,
 				directions: action.directions,
-				location: action.name,
 				segments: action.segments
 			}
 		case CLEAR_DIRECTIONS:
 			return {
 				...state,
 				directions: [],
-				location: '',
 				segments: []
 			}
 		default:

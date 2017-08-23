@@ -7,6 +7,7 @@ import Autosuggest from 'react-autosuggest'
 import { Icon } from 'semantic-ui-react'
 import { throttle, isEqual } from 'lodash'
 import { setMapView, clearDirections } from '../../store/actions/map'
+import { setVenue } from '../../store/actions/venue'
 import { getInfo } from '../../wofMethods'
 import './Searchbar.css'
 
@@ -88,6 +89,7 @@ class FindSearchBar extends React.Component {
 		this.setState({ value: '' })
 		this.onSuggestionsClearRequested()
 		this.props.clearDirections()
+		this.props.setVenue(suggestionValue)
 
 	}
 
@@ -208,7 +210,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({setMapView, clearDirections}, dispatch)
+	return bindActionCreators({setMapView, clearDirections, setVenue}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FindSearchBar)

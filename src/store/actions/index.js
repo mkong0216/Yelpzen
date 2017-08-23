@@ -9,3 +9,5 @@ export const ADD_REVIEW = 'ADD_REVIEW'
 
 export const ADD_WAYPOINTS = 'ADD_WAYPOINTS'
 
+export const SET_VENUE = 'SET_VENUE'
+export const CLEAR_VENUE = 'CLEAR_VENUE'

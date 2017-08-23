@@ -31,12 +31,14 @@ class LocalSpots extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (isEqual(this.props.source, nextProps.source)) { return }
+		if (isEqual(this.props.source, nextProps.source) && nextProps.venue !== '') { return }
+		if (!nextProps.source) { return }
 		const id = nextProps.source.id
 		const endpoint = getDescendants(id)
 		this.makeRequest(endpoint)
 	}
 
+	// Getting all local spots and adding markers to map of local spots
 	makeRequest(endpoint) {
 		window.fetch(endpoint)
 			.then(response => response.json())
@@ -76,7 +78,7 @@ class LocalSpots extends React.Component {
 					<List.Header>  
 						<List.Icon name='marker' />
 						<Link to={`/venue/${venue['wof:name']}/${venue['wof:id']}`}>
-							<span onClick={this.props.clearDirections}> { venue['wof:name'] } </span>
+							{ venue['wof:name'] }
 						</Link>
 					</List.Header>
 					<List.Description className='address'> { venue['addr:full'] } </List.Description>
@@ -106,7 +108,8 @@ class LocalSpots extends React.Component {
 function mapStateToProps(state) {
 	return {
 		label: state.locality.label,
-		source: state.locality.source
+		source: state.locality.source,
+		venue: state.venue
 	}
 }
 

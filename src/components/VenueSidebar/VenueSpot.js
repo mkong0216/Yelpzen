@@ -9,6 +9,7 @@ import polyline from '@mapbox/polyline'
 import config from '../../config'
 import { setMapView, displayDirections } from '../../store/actions/map'
 import { addWaypoints } from '../../store/actions/markers'
+import { setVenue } from '../../store/actions/venue'
 import { getInfo } from '../../wofMethods'
 
 class VenueSpot extends React.Component {
@@ -21,7 +22,7 @@ class VenueSpot extends React.Component {
 		coordinates: PropTypes.array,
 		geolocation: PropTypes.object
 	}
-	
+
 	constructor(props) {
 		super(props)
 
@@ -40,6 +41,8 @@ class VenueSpot extends React.Component {
 		this.handleClick = this.handleClick.bind(this)
 	}
 
+	componentWillMount() { this.props.setVenue(this.props.name) }
+	
 	componentWillReceiveProps(nextProps) {
 		if (isEqual(nextProps.id, this.props.id)) { return }
 		const endpoint = getInfo(nextProps.id)
@@ -82,7 +85,7 @@ class VenueSpot extends React.Component {
 		}
 
 		this.props.addWaypoints([start, end])
-		const endpoint = `https://valhalla.mapzen.com/route?json={"locations":[{"lat":${geolocation[0]},"lon":${geolocation[1]}},{"lat":${coordinates[0]},"lon":${coordinates[1]}}],"costing":"multimodal"}&api_key=${config.mapzen.apiKey}`
+		const endpoint = `https://valhalla.mapzen.com/route?json={"locations":[{"lat":${geolocation.latlng[0]},"lon":${geolocation.latlng[1]}},{"lat":${coordinates[0]},"lon":${coordinates[1]}}],"costing":"multimodal"}&api_key=${config.mapzen.apiKey}`
 		this.getDirections(endpoint)
 	}
 
@@ -91,7 +94,7 @@ class VenueSpot extends React.Component {
 			.then(response => response.json())
 			.then((results) => {
 				const segments = polyline.decode(results.trip.legs[0].shape, 6)
-				this.props.displayDirections(results.trip.legs[0].maneuvers, this.props.name, segments)
+				this.props.displayDirections(results.trip.legs[0].maneuvers, segments)
 			})
 	}
 
@@ -145,7 +148,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({setMapView, displayDirections, addWaypoints}, dispatch)
+	return bindActionCreators({setMapView, displayDirections, addWaypoints, setVenue}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(VenueSpot)
