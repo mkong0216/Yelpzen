@@ -61,7 +61,7 @@ class VenueSpot extends React.Component {
 					address: results.place['addr:full'],
 					tags: results.place['wof:tags'],
 					categories: results.place['sg:classifiers'][0],
-					phone: (phone.length > 10) ? phone : 'N/A',
+					phone: (phone && phone.length > 10) ? phone : 'N/A',
 					website: (website !== undefined) ? website : 'N/A'
 				})
 				const waypoint = {

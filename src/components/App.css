@@ -35,3 +35,15 @@ h1.ui.header {
 	bottom: 0;
 	margin: 0 auto;
 }
+
+.categories {
+	position: relative;
+	top: 65px;
+}
+
+.ui.compact.button.category {
+	margin-left: 10px;
+	margin-right: 10px;
+	background: transparent;
+	color: white;
+}

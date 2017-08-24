@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import L from 'leaflet'
 import { Header, Loader, Dimmer, List, Label } from 'semantic-ui-react'
 import { isEqual } from 'lodash'
-import { getDescendants, compare } from '../../wofMethods'
+import { getDescendants, compare, getVenuesByTag } from '../../wofMethods'
 import { addWaypoints } from '../../store/actions/markers'
 import { setMapView, clearDirections } from '../../store/actions/map'
 
@@ -31,23 +31,23 @@ class LocalSpots extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (isEqual(this.props.source, nextProps.source) && nextProps.venue !== '') { return }
+		if (isEqual(this.props.source, nextProps.source) && nextProps.venue !== '' && nextProps.category === '') { return }
 		if (!nextProps.source) { return }
+		console.log('receiving')
 		const id = nextProps.source.id
 		const endpoint = getDescendants(id)
-		this.makeRequest(endpoint)
+		this.makeRequest(endpoint, nextProps.category)
 	}
 
 	// Getting all local spots and adding markers to map of local spots
-	makeRequest(endpoint) {
+	makeRequest(endpoint, category = '') {
 		window.fetch(endpoint)
 			.then(response => response.json())
 			.then((results) => {
 				const venues = results.places
-				venues.sort(compare)
-				const localSpots = venues.slice(0,10)
+				const localSpots = (category === '') ? venues.sort(compare) : getVenuesByTag(category, venues)
 				this.setState({
-					localSpots: localSpots,
+					localSpots: localSpots.slice(0,10),
 					isLoading: false
 				})
 				this.addWaypoints(this.state.localSpots)
@@ -91,6 +91,7 @@ class LocalSpots extends React.Component {
 			</List.Item>
 		)
 	}
+	
 	render() {
 		const venues = this.state.localSpots
 		return(
@@ -99,7 +100,7 @@ class LocalSpots extends React.Component {
 				<Dimmer active={this.state.isLoading}>
 					<Loader> Finding spots near you </Loader>
 				</Dimmer>
-				{venues.map(this.renderLocalSpot)}
+				{ venues.map(this.renderLocalSpot) }
 			</div>
 		)
 	}
@@ -109,7 +110,8 @@ function mapStateToProps(state) {
 	return {
 		label: state.locality.label,
 		source: state.locality.source,
-		venue: state.venue
+		venue: state.venue,
+		category: state.category
 	}
 }
 

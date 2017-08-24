@@ -43,6 +43,14 @@ export function getHierarchies(latlng) {
 		})
 }
 
+export function getVenuesByTag(category, venues) {
+	return venues.filter(function(venue) {
+		if (venue['sg:classifiers'].length !== 0 && venue['sg:classifiers'][0].category === category) {
+			return venue
+		} 
+	})
+}
+
 export function compare(a, b) {
 	const categories = {
 		'Restaurant': 1,
@@ -72,7 +80,7 @@ export function compare(a, b) {
 }
 
 export function getDescendants(id) {
-	const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getDescendants&api_key=${config.mapzen.apiKey}&id=${id}&placetype=venue&iscurrent=1&exclude=nullisland&extras=wof:tags,addr:,sg:classifiers,geom:latitude,geom:longitude`
+	const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getDescendants&api_key=${config.mapzen.apiKey}&id=${id}&placetype=venue&iscurrent=1&exclude=nullisland&per_page=500&extras=wof:tags,addr:,sg:classifiers,geom:latitude,geom:longitude`
 	return endpoint
 }
 
