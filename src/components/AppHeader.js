@@ -1,13 +1,14 @@
 import React from 'react'
-import { Header, Button } from 'semantic-ui-react'
+import { Header } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import FindSearchBar from './Searchbars/FindSearchBar'
 import NearSearchBar from './Searchbars/NearSearchBar'
+import Category from './Category'
 import { clearDirections } from '../store/actions/map'
 import { clearVenue } from '../store/actions/venue'
-import * as categoryActionCreators from '../store/actions/category'
+import { clearCategory } from '../store/actions/category'
  
 class AppHeader extends React.Component {
 	constructor(props) {
@@ -23,11 +24,6 @@ class AppHeader extends React.Component {
 		this.props.clearCategory()
 	}
 
-	getCategory(event) {
-		const classList = event.target.classList
-		this.props.setCategory(classList[classList.length - 1])
-	} 
-
 	render() {
 		return (
 			<div className={this.props.className}>
@@ -39,10 +35,10 @@ class AppHeader extends React.Component {
 					<NearSearchBar className='Near' config={this.props.config} />
 				</div> 
 				<div className='categories'>
-					<Button content='Restaurants' icon='food' compact onClick={this.getCategory} className='category Restaurant'/>
-					<Button content='Shopping' icon='shopping bag' compact onClick={this.getCategory} className='category Shopping' />
-					<Button content='Entertainment' icon='film' compact onClick={this.getCategory} className='category Arts & Performance' />
-					<Button content='Activities' icon='soccer' compact onClick={this.getCategory} className='category Recreation' />
+					<Category content='Restaurants' icon='food' category='Restaurant'/>
+					<Category content='Shopping' icon='shopping bag' category='Shopping' />
+					<Category content='Entertainment' icon='film' category='Arts & Performance' />
+					<Category content='Activities' icon='soccer' category='Recreation' />
 				</div>
 			</div>
 		)
@@ -54,7 +50,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({clearDirections, clearVenue, ...categoryActionCreators}, dispatch)
+	return bindActionCreators({clearDirections, clearVenue, clearCategory }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppHeader)
