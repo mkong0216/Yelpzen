@@ -45,9 +45,7 @@ export function getHierarchies(latlng) {
 
 export function getVenuesByTag(category, venues) {
 	return venues.filter(function(venue) {
-		if (venue['sg:classifiers'].length !== 0 && venue['sg:classifiers'][0].category === category) {
-			return venue
-		} 
+		return venue['sg:classifiers'].length !== 0 && venue['sg:classifiers'][0].category === category
 	})
 }
 

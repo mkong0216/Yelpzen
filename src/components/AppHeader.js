@@ -15,7 +15,6 @@ class AppHeader extends React.Component {
 		super(props)
 
 		this.handleClick = this.handleClick.bind(this)
-		this.getCategory = this.getCategory.bind(this)
 	}
 
 	handleClick(event) {
