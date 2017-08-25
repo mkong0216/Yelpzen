@@ -8,6 +8,7 @@ import { Icon } from 'semantic-ui-react'
 import { throttle, isEqual } from 'lodash'
 import { setMapView, clearDirections } from '../../store/actions/map'
 import { setVenue } from '../../store/actions/venue'
+import { clearCategory } from '../../store/actions/category'
 import { getInfo } from '../../wofMethods'
 import './Searchbar.css'
 
@@ -90,6 +91,7 @@ class FindSearchBar extends React.Component {
 		this.onSuggestionsClearRequested()
 		this.props.clearDirections()
 		this.props.setVenue(suggestionValue)
+		this.props.clearCategory()
 
 	}
 
@@ -210,7 +212,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({setMapView, clearDirections, setVenue}, dispatch)
+	return bindActionCreators({setMapView, clearDirections, setVenue, clearCategory}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FindSearchBar)
