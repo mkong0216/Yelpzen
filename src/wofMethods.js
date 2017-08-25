@@ -52,7 +52,7 @@ export function getVenuesByCategory(category, venues) {
 }
 
 export function compare(a, b) {
-	const popular = categories['Food'].concat(categories['Shopping'], categories['Entertainment'])
+	const popular = categories['Food'].concat(categories['Entertainment'])
 	const categoryA = (a['sg:classifiers'].length === 0) ? '' : a['sg:classifiers'][0].category 
 	const categoryB = (b['sg:classifiers'].length === 0) ? '' : b['sg:classifiers'][0].category 
 	const valueA = (popular.includes(categoryA)) ? 1 : -1

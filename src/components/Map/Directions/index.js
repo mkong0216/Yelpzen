@@ -107,7 +107,10 @@ class Directions extends React.Component {
 
 	toggleVisibility(event) {
 		const directions = event.target.nextSibling
-		this.setState({ isVisible: !this.state.isVisible })
+		this.setState({ 
+			isVisible: !this.state.isVisible,
+			isEditing: false
+		})
 		directions.classList.toggle('hidden')
 	}
 
