@@ -4,6 +4,7 @@ import { Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { setCategory } from '../store/actions/category'
+import { clearDirections } from '../store/actions/map'
 
 
 class Category extends React.Component {
@@ -15,6 +16,7 @@ class Category extends React.Component {
 
 	handleClick(event) {
 		this.props.setCategory(this.props.category)
+		this.props.clearDirections()
 	} 
 
 	render() {
@@ -31,7 +33,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({setCategory}, dispatch)
+	return bindActionCreators({setCategory, clearDirections}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Category)

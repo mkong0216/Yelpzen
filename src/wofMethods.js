@@ -2,6 +2,7 @@ import config from './config'
 import store from './store'
 import { setLocality, setGeolocation } from './store/actions/locality'
 import { setMapView } from './store/actions/map'
+import categories from './categories'
 
 export function geolocateMe() {
 	const geolocation = window.navigator.geolocation
@@ -43,38 +44,20 @@ export function getHierarchies(latlng) {
 		})
 }
 
-export function getVenuesByTag(category, venues) {
+export function getVenuesByCategory(category, venues) {
+	const categoriesList = categories[category]
 	return venues.filter(function(venue) {
-		return venue['sg:classifiers'].length !== 0 && venue['sg:classifiers'][0].category === category
+		return venue['sg:classifiers'].length !== 0 && categoriesList.includes(venue['sg:classifiers'][0].category)
 	})
 }
 
 export function compare(a, b) {
-	const categories = {
-		'Restaurant': 1,
-		'Bars & Pubs': 1,
-		'Food & Beverages': 1,
-		'Coffee & Tea': 1,
-		'Food & Drink': 1,
-		'Deli': 1,
-		'Fast Food': 1,
-		'Cafe': 1,
-		'Bakery': 1,
-		'Cinema': 2,
-		'Museum': 2,
-		'Arts & Performances': 2,
-		'Recreation': 2,
-		'Shopping': 2
-	}
+	const popular = categories['Food'].concat(categories['Shopping'], categories['Entertainment'])
 	const categoryA = (a['sg:classifiers'].length === 0) ? '' : a['sg:classifiers'][0].category 
 	const categoryB = (b['sg:classifiers'].length === 0) ? '' : b['sg:classifiers'][0].category 
-	if (!(categoryA in categories)) { 
-		categories[categoryA] = 3
-	}
-	if (!(categoryB in categories)) {
-		categories[categoryB] = 3
-	}
-	return categories[categoryA] - categories[categoryB]
+	const valueA = (popular.includes(categoryA)) ? 1 : -1
+	const valueB = (popular.includes(categoryB)) ? 1 : -1
+	return valueB - valueA
 }
 
 export function getDescendants(id) {

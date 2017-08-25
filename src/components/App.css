@@ -47,3 +47,7 @@ h1.ui.header {
 	background: transparent;
 	color: white;
 }
+
+.ui.compact.button.category:hover {
+	border: solid 1px #fcdbdb;
+}

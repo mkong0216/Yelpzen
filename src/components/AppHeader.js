@@ -34,10 +34,10 @@ class AppHeader extends React.Component {
 					<NearSearchBar className='Near' config={this.props.config} />
 				</div> 
 				<div className='categories'>
-					<Category content='Restaurants' icon='food' category='Restaurant'/>
+					<Category content='Food' icon='food' category='Food'/>
 					<Category content='Shopping' icon='shopping bag' category='Shopping' />
-					<Category content='Entertainment' icon='film' category='Arts & Performance' />
-					<Category content='Activities' icon='soccer' category='Recreation' />
+					<Category content='Entertainment' icon='film' category='Entertainment' />
+					<Category content='Services' icon='configure' category='Services' />
 				</div>
 			</div>
 		)

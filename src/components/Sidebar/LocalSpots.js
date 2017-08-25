@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import L from 'leaflet'
 import { Header, Loader, Dimmer, List, Label } from 'semantic-ui-react'
 import { isEqual } from 'lodash'
-import { getDescendants, compare, getVenuesByTag } from '../../wofMethods'
+import { getDescendants, compare, getVenuesByCategory } from '../../wofMethods'
 import { addWaypoints } from '../../store/actions/markers'
 import { setMapView, clearDirections } from '../../store/actions/map'
 
@@ -45,7 +45,7 @@ class LocalSpots extends React.Component {
 			.then(response => response.json())
 			.then((results) => {
 				const venues = results.places
-				const localSpots = (category === '') ? venues.sort(compare) : getVenuesByTag(category, venues)
+				const localSpots = (category === '') ? venues.sort(compare) : getVenuesByCategory(category, venues)
 				this.setState({
 					localSpots: localSpots.slice(0,10),
 					isLoading: false
