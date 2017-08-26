@@ -8,6 +8,7 @@ import { Icon } from 'semantic-ui-react'
 import { throttle } from 'lodash'
 import { setMapView, clearDirections } from '../../store/actions/map'
 import { setLocality } from '../../store/actions/locality'
+import { clearCategory } from '../../store/actions/category'
 import './Searchbar.css'
 
 class NearSearchBar extends React.Component {
@@ -82,6 +83,7 @@ class NearSearchBar extends React.Component {
 		this.props.setMapView(latlng, 10)
 		this.props.setLocality(label, source)
 		this.props.clearDirections()
+		this.props.clearCategory()
 	}
 
 	renderSuggestion (suggestion, {query, isHighlighted}) {
@@ -190,7 +192,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({setLocality, setMapView, clearDirections}, dispatch)
+	return bindActionCreators({setLocality, setMapView, clearDirections, clearCategory}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NearSearchBar)
