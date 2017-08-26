@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux'
 import FindSearchBar from './Searchbars/FindSearchBar'
 import NearSearchBar from './Searchbars/NearSearchBar'
 import Category from './Category'
-import { clearDirections } from '../store/actions/map'
+import { clearDirections, setMapView } from '../store/actions/map'
 import { clearVenue } from '../store/actions/venue'
 import { clearCategory } from '../store/actions/category'
  
@@ -21,6 +21,7 @@ class AppHeader extends React.Component {
 		this.props.clearDirections()
 		this.props.clearVenue()
 		this.props.clearCategory()
+		this.props.setMapView(this.props.source.latlng, 10)
 	}
 
 	render() {
@@ -45,11 +46,13 @@ class AppHeader extends React.Component {
 }
 
 function mapStateToProps(state) {
-	return {}
+	return {
+		source: state.locality.source
+	}
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({clearDirections, clearVenue, clearCategory }, dispatch)
+	return bindActionCreators({clearDirections, clearVenue, clearCategory,setMapView}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppHeader)
