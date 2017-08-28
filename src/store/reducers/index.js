@@ -3,16 +3,14 @@ import locality from './locality'
 import map from './map'
 import reviews from './reviews'
 import markers from './markers'
-import venue from './venue'
-import category from './category'
+import app from './app'
 
 const reducers = combineReducers({
 	locality,
 	map,
 	reviews,
 	markers,
-	venue,
-	category
+	app
 })
 
 export default reducers

@@ -14,3 +14,5 @@ export const CLEAR_VENUE = 'CLEAR_VENUE'
 
 export const SET_CATEGORY = 'SET_CATEGORY'
 export const CLEAR_CATEGORY = 'CLEAR_CATEGORY'
+
+export const CLEAR_APP = 'CLEAR_APP'

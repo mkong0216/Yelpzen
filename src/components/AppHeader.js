@@ -7,8 +7,7 @@ import FindSearchBar from './Searchbars/FindSearchBar'
 import NearSearchBar from './Searchbars/NearSearchBar'
 import Category from './Category'
 import { clearDirections, setMapView } from '../store/actions/map'
-import { clearVenue } from '../store/actions/venue'
-import { clearCategory } from '../store/actions/category'
+import { clearApp } from '../store/actions/app'
  
 class AppHeader extends React.Component {
 	constructor(props) {
@@ -18,10 +17,12 @@ class AppHeader extends React.Component {
 	}
 
 	handleClick(event) {
+		// When header is clicked, return back to local spots of current value of locality
+		// Clear the directions if any and set venue and category back to false
 		this.props.clearDirections()
-		this.props.clearVenue()
-		this.props.clearCategory()
-		this.props.setMapView(this.props.source.latlng, 10)
+		this.props.clearApp()
+		// Also return back to map view of locality 
+		if (this.props.source) { setMapView(this.props.source.latlng, 10) }
 	}
 
 	render() {
@@ -35,7 +36,7 @@ class AppHeader extends React.Component {
 					<NearSearchBar className='Near' config={this.props.config} />
 				</div> 
 				<div className='categories'>
-					<Category content='Food' icon='food' category='Food'/>
+					<Category content='Food' icon='food' category='Food' />
 					<Category content='Shopping' icon='shopping bag' category='Shopping' />
 					<Category content='Entertainment' icon='film' category='Entertainment' />
 					<Category content='Services' icon='configure' category='Services' />
@@ -52,7 +53,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({clearDirections, clearVenue, clearCategory,setMapView}, dispatch)
+	return bindActionCreators({clearDirections, clearApp, setMapView}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppHeader)
