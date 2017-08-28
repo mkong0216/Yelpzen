@@ -9,6 +9,7 @@ import { isEqual } from 'lodash'
 import { getDescendants, compare, getVenuesByCategory } from '../../wofMethods'
 import { addWaypoints } from '../../store/actions/markers'
 import { setMapView, clearDirections } from '../../store/actions/map'
+import { clearCategory } from '../../store/actions/category'
 
 class LocalSpots extends React.Component {
 	static propTypes = {
@@ -78,7 +79,7 @@ class LocalSpots extends React.Component {
 					<List.Header>  
 						<List.Icon name='marker' />
 						<Link to={`/venue/${venue['wof:name']}/${venue['wof:id']}`}>
-							{ venue['wof:name'] }
+							<span onClick={this.props.clearCategory}> { venue['wof:name'] } </span>
 						</Link>
 					</List.Header>
 					<List.Description className='address'> { venue['addr:full'] } </List.Description>
@@ -116,7 +117,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({addWaypoints, clearDirections, setMapView}, dispatch)
+	return bindActionCreators({addWaypoints, clearDirections, setMapView, clearCategory}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LocalSpots)
