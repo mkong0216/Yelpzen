@@ -6,9 +6,8 @@ import PropTypes from 'prop-types'
 import Autosuggest from 'react-autosuggest'
 import { Icon } from 'semantic-ui-react'
 import { throttle, isEqual } from 'lodash'
-import { setMapView, clearDirections } from '../../store/actions/map'
-import { setVenue } from '../../store/actions/venue'
-import { clearCategory } from '../../store/actions/category'
+import * as mapActionCreators from '../../store/actions/map'
+import * as appActionCreators from '../../store/actions/app'
 import { getInfo } from '../../wofMethods'
 import './Searchbar.css'
 
@@ -90,7 +89,7 @@ class FindSearchBar extends React.Component {
 		this.setState({ value: '' })
 		this.onSuggestionsClearRequested()
 		this.props.clearDirections()
-		this.props.setVenue(suggestionValue)
+		this.props.setVenue()
 		this.props.clearCategory()
 
 	}
@@ -109,7 +108,7 @@ class FindSearchBar extends React.Component {
 	  	}
 
 	  	return (
-	  		<Link to={`/venue/${label}/${id}`}>
+	  		<Link to={`/venue/${id}/${label}`}>
 		    	<div className="map-search-suggestion-item">
 		      		<Icon name="marker" /> {highlighted}{', ' + cityState}
 		    	</div>
@@ -212,7 +211,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({setMapView, clearDirections, setVenue, clearCategory}, dispatch)
+	return bindActionCreators({...appActionCreators, ...mapActionCreators}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FindSearchBar)

@@ -14,7 +14,6 @@ import './Directions.css'
 
 class Directions extends React.Component {
 	static propTypes = {
-		venue: PropTypes.string,
 		addWaypoints: PropTypes.func.isRequired,
 		markers: PropTypes.array,
 		coordinates: PropTypes.array,
@@ -38,7 +37,8 @@ class Directions extends React.Component {
 	}
 
 	componentWillUpdate(nextProps) {
-		if (isEqual(this.props.venue, nextProps.venue)) { return } 
+		if (isEqual(this.props.markers, nextProps.markers)) { return } 
+		// If not the same, reset startInput to geolocation
 		this.setState({startInput: ''})
 	}
 
@@ -79,7 +79,7 @@ class Directions extends React.Component {
 		if (this.state.isEditing) {
 			return (
 				<form onSubmit={this.handleSubmit}> 
-					<input className='start_input' ref='startInput' />
+					<input className='start_input' ref='startInput' autoFocus />
 				</form>
 			)
 		} else {
@@ -125,6 +125,10 @@ class Directions extends React.Component {
 
 	render() {
 		const { directions } = this.props
+		const pathname = decodeURIComponent(window.location.pathname)
+		const index = pathname.lastIndexOf('/')
+		// Getting venue name to display on directions
+		const venueName = pathname.substring(index + 1, pathname.length)
 		if (directions.length !== 0) { 
 			return (
 				<div className='direction-container'>
@@ -140,7 +144,7 @@ class Directions extends React.Component {
 						<List.Item> 
 							<Icon name='map pin' />
 							<List.Content>
-								<List.Header className='point'> {this.props.venue} </List.Header>
+								<List.Header className='point'> {venueName} </List.Header>
 							</List.Content>
 						</List.Item>
 					</List>
@@ -155,8 +159,7 @@ function mapStateToProps(state) {
 		directions: state.map.directions,
 		geolocation: state.locality.geolocation,
 		coordinates: state.map.coordinates,
-		markers: state.markers.waypoints,
-		venue: state.venue
+		markers: state.markers.waypoints
 	}
 }
 
