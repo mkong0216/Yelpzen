@@ -96,7 +96,8 @@ class FindSearchBar extends React.Component {
 
 	renderSuggestion (suggestion, {query, isHighlighted}) {
 	  	const label = suggestion['wof:name']
-	  	const cityState = suggestion['sg:city'] + ', ' + suggestion['sg:province']
+	  	const cityState = (typeof suggestion['sg:city'] === 'undefined' || typeof suggestion['sg:province'] === 'undefined') ? 
+	  						this.props.source.name : suggestion['sg:city'] + ', ' + suggestion['sg:province']
 	  	const id = suggestion['wof:id']
 	  	// Highlight the input query
 	  	const r = new RegExp(`(${query})`, 'gi')
@@ -127,7 +128,7 @@ class FindSearchBar extends React.Component {
 		// Store lat/lng of locality to use in this url  (focus.point.lat, focus.point.lon)
   		//const endpoint = `https://search.mapzen.com/v1/autocomplete?text=${query}&api_key=${this.props.config.mapzen.apiKey}&focus.point.lat=${this.props.coordinates[0]}&focus.point.lon=${this.props.coordinates[1]}&layers=venue`
   		const placetype = this.state.placetype
-  		const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.search&api_key=${this.props.config.mapzen.apiKey}&q=${query}&${placetype}=${this.props.source.id}&placetype=venue&per_page=10&extras=geom:latitude,geom:longitude,sg:,addr:full,wof:tags`
+  		const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.search&api_key=${this.props.config.mapzen.apiKey}&q=${query}&${placetype}=${this.props.source.id}&placetype=venue&per_page=100&extras=geom:latitude,geom:longitude,sg:,addr:full,wof:tags`
   		this.throttleMakeRequest(endpoint)
 	}
 
