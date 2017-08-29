@@ -42,7 +42,6 @@ export function getHierarchies(latlng) {
 			const path = window.location.pathname
 			store.dispatch(setGeolocation({latlng: latlng, label: label}))
 			if (path.includes('venue')) { 
-				console.log('true')
 				store.dispatch(setVenue())
 			} else {
 				store.dispatch(setMapView(latlng, 12))

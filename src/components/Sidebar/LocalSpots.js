@@ -11,6 +11,7 @@ import { parseQueryString } from '../../url-state'
 import { addWaypoints } from '../../store/actions/markers'
 import * as mapActionCreators from '../../store/actions/map'
 import * as appActionCreators from '../../store/actions/app'
+import './Sidebar.css'
 
 
 class LocalSpots extends React.Component {
@@ -111,9 +112,10 @@ class LocalSpots extends React.Component {
 		return(
 			<div className='local-spots'>
 				<Header as='h3'> 
-					Great spots near <i> {this.props.label} </i> 
+					Great spots near <i> {this.props.label} </i>
 				</Header>
-				<p> <center> { this.props.app.category ? 'Tagged ' + category : '' } </center> </p>
+				{ this.props.app.category ? <Header sub block as='h4' className='category'> {'Tagged ' + category} </Header> : '' } 
+					
 				<Dimmer active={this.state.isLoading}>
 					<Loader> 
 						Finding spots near you 

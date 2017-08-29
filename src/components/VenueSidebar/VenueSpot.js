@@ -60,7 +60,7 @@ class VenueSpot extends React.Component {
 				this.setState({
 					address: results.place['addr:full'],
 					tags: results.place['wof:tags'],
-					categories: results.place['sg:classifiers'][0],
+					categories: (typeof results.place['sg:classifiers'] !== 'undefined') ? results.place['sg:classifiers'][0] : {},
 					phone: (phone && phone.length > 10) ? phone : 'N/A',
 					website: (website !== undefined) ? website : 'N/A'
 				})
