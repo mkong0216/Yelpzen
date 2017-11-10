@@ -19,7 +19,7 @@ export function error() {
 }
 
 export function getHierarchies(latlng) {
-	const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getHierarchiesByLatLon&api_key=${config.mapzen.apiKey}&latitude=${latlng[0]}&longitude=${latlng[1]}&placetype=neighbourhood&spr=1&extras=edtf:deprecated,geom:`
+	const endpoint = `https://places.mapzen.com/v1/?method=whosonfirst.places.getHierarchiesByLatLon&api_key=${config.mapzen.apiKey}&latitude=${latlng[0]}&longitude=${latlng[1]}&placetype=neighbourhood&spr=1&extras=edtf:deprecated,geom:`
 	window.fetch(endpoint)
 		.then(response => response.json())
 		.then((results) => {
@@ -61,12 +61,12 @@ export function compare(a, b) {
 }
 
 export function getDescendants(id) {
-	const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getDescendants&api_key=${config.mapzen.apiKey}&id=${id}&placetype=venue&iscurrent=1&exclude=nullisland&per_page=500&extras=wof:tags,addr:,sg:classifiers,geom:latitude,geom:longitude`
+	const endpoint = `https://places.mapzen.com/v1/?method=whosonfirst.places.getDescendants&api_key=${config.mapzen.apiKey}&id=${id}&placetype=venue&iscurrent=1&exclude=nullisland&per_page=500&extras=wof:tags,addr:,sg:classifiers,geom:latitude,geom:longitude`
 	return endpoint
 }
 
 export function getInfo(id) {
-	const endpoint = `https://whosonfirst-api.mapzen.com/?method=whosonfirst.places.getInfo&api_key=${config.mapzen.apiKey}&id=${id}&extras=wof:tags,addr:,sg:,geom:latitude, geom:longitude`
+	const endpoint = `https://places.mapzen.com/v1/?method=whosonfirst.places.getInfo&api_key=${config.mapzen.apiKey}&id=${id}&extras=wof:tags,addr:,sg:,geom:latitude, geom:longitude`
 	return endpoint
 }
 
