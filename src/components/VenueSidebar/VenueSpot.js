@@ -9,7 +9,7 @@ import polyline from '@mapbox/polyline'
 import config from '../../config'
 import { setMapView, displayDirections } from '../../store/actions/map'
 import { addWaypoints } from '../../store/actions/markers'
-import { setVenue } from '../../store/actions/venue'
+import { setVenue } from '../../store/actions/app'
 import { getInfo } from '../../wofMethods'
 
 class VenueSpot extends React.Component {
@@ -40,11 +40,11 @@ class VenueSpot extends React.Component {
 		this.makeRequest = this.makeRequest.bind(this)
 		this.handleClick = this.handleClick.bind(this)
 	}
-
-	componentWillMount() { this.props.setVenue(this.props.name) }
 	
 	componentWillReceiveProps(nextProps) {
+		// If same venue do not change anything
 		if (isEqual(nextProps.id, this.props.id)) { return }
+		// Else, get the new venue's information
 		const endpoint = getInfo(nextProps.id)
 		this.makeRequest(endpoint)
 	}
@@ -60,7 +60,7 @@ class VenueSpot extends React.Component {
 				this.setState({
 					address: results.place['addr:full'],
 					tags: results.place['wof:tags'],
-					categories: results.place['sg:classifiers'][0],
+					categories: (typeof results.place['sg:classifiers'] !== 'undefined') ? results.place['sg:classifiers'][0] : {},
 					phone: (phone && phone.length > 10) ? phone : 'N/A',
 					website: (website !== undefined) ? website : 'N/A'
 				})
@@ -68,11 +68,13 @@ class VenueSpot extends React.Component {
 					latlng: latlng,
 					label: this.props.name
 				}
+				// Add marker of venue to map, remove others
 				this.props.addWaypoints([waypoint])
 			})
 	}
 
 	handleClick(event) {
+		// If 'get directions' is clicked, add another marker to represet starting point to map
 		const { coordinates, geolocation, name } = this.props
 		const start = {
 			latlng: L.latLng(geolocation.latlng[0], geolocation.latlng[1]),
@@ -89,6 +91,7 @@ class VenueSpot extends React.Component {
 		this.getDirections(endpoint)
 	}
 
+	// Storing directions and segments
 	getDirections(endpoint) {
 		window.fetch(endpoint) 
 			.then(response => response.json())

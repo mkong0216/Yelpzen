@@ -3,13 +3,16 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import { isEqual } from 'lodash'
 import L from 'leaflet'
 import { Header, Loader, Dimmer, List, Label } from 'semantic-ui-react'
-import { isEqual } from 'lodash'
 import { getDescendants, compare, getVenuesByCategory } from '../../wofMethods'
+import { parseQueryString } from '../../url-state'
 import { addWaypoints } from '../../store/actions/markers'
-import { setMapView, clearDirections } from '../../store/actions/map'
-import { clearCategory } from '../../store/actions/category'
+import * as mapActionCreators from '../../store/actions/map'
+import * as appActionCreators from '../../store/actions/app'
+import './Sidebar.css'
+
 
 class LocalSpots extends React.Component {
 	static propTypes = {
@@ -29,24 +32,27 @@ class LocalSpots extends React.Component {
 
 		this.makeRequest = this.makeRequest.bind(this)
 		this.renderLocalSpot = this.renderLocalSpot.bind(this)
+		this.handleClick = this.handleClick.bind(this)
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (isEqual(this.props.source, nextProps.source) && nextProps.venue !== '' && nextProps.category === '') { return }
+		// If source is still the same and venue a venue is not clicked, return
+		if (isEqual(this.props.source, nextProps.source) && nextProps.app.venue) { return }
 		if (!nextProps.source) { return }
-		console.log('receiving')
+		// 
 		const id = nextProps.source.id
 		const endpoint = getDescendants(id)
-		this.makeRequest(endpoint, nextProps.category)
+		this.makeRequest(endpoint, nextProps.app.category)
 	}
 
 	// Getting all local spots and adding markers to map of local spots
-	makeRequest(endpoint, category = '') {
+	// If category was selected, list only local spots of that specific category
+	makeRequest(endpoint, categorySet) {
 		window.fetch(endpoint)
 			.then(response => response.json())
 			.then((results) => {
 				const venues = results.places
-				const localSpots = (category === '') ? venues.sort(compare) : getVenuesByCategory(category, venues)
+				const localSpots = (!categorySet) ? venues.sort(compare) : getVenuesByCategory(parseQueryString('category'), venues)
 				this.setState({
 					localSpots: localSpots.slice(0,10),
 					isLoading: false
@@ -55,6 +61,7 @@ class LocalSpots extends React.Component {
 			})
 	}
 
+	// Adding local spots markers to map
 	addWaypoints(localSpots) {
 		const waypoints = []
 		localSpots.map((key, i) => {
@@ -72,14 +79,20 @@ class LocalSpots extends React.Component {
 		this.props.addWaypoints(waypoints)
 	}
 
+	// If a venue is selected, set category to false and set venue to true
+	handleClick(event) {
+		this.props.clearCategory()
+		this.props.setVenue()
+	}
+
 	renderLocalSpot(venue, i) {
 		return (
 			<List.Item className='venue' key={i}>
 				<List.Content>
 					<List.Header>  
 						<List.Icon name='marker' />
-						<Link to={`/venue/${venue['wof:name']}/${venue['wof:id']}`}>
-							<span onClick={this.props.clearCategory}> { venue['wof:name'] } </span>
+						<Link to={`/venue/${venue['wof:id']}/${venue['wof:name']}`}>
+							<span onClick={this.handleClick}> { venue['wof:name'] } </span>
 						</Link>
 					</List.Header>
 					<List.Description className='address'> { venue['addr:full'] } </List.Description>
@@ -95,11 +108,18 @@ class LocalSpots extends React.Component {
 	
 	render() {
 		const venues = this.state.localSpots
+		const category = parseQueryString('category')
 		return(
 			<div className='local-spots'>
-				<Header as='h3'> Great spots near <i> {this.props.label} </i> </Header>
+				<Header as='h3'> 
+					Great spots near <i> {this.props.label} </i>
+				</Header>
+				{ this.props.app.category ? <Header sub block as='h4' className='category'> {'Tagged ' + category} </Header> : '' } 
+					
 				<Dimmer active={this.state.isLoading}>
-					<Loader> Finding spots near you </Loader>
+					<Loader> 
+						Finding spots near you 
+					</Loader>
 				</Dimmer>
 				{ venues.map(this.renderLocalSpot) }
 			</div>
@@ -111,13 +131,12 @@ function mapStateToProps(state) {
 	return {
 		label: state.locality.label,
 		source: state.locality.source,
-		venue: state.venue,
-		category: state.category
+		app: state.app
 	}
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({addWaypoints, clearDirections, setMapView, clearCategory}, dispatch)
+	return bindActionCreators({...mapActionCreators, ...appActionCreators, addWaypoints }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LocalSpots)

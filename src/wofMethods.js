@@ -2,6 +2,7 @@ import config from './config'
 import store from './store'
 import { setLocality, setGeolocation } from './store/actions/locality'
 import { setMapView } from './store/actions/map'
+import { setVenue } from './store/actions/app'
 import categories from './categories'
 
 export function geolocateMe() {
@@ -37,10 +38,15 @@ export function getHierarchies(latlng) {
 				id: hierarchies[0].neighbourhood['wof:id'],
 				latlng: [hierarchies[0].neighbourhood['geom:latitude'], hierarchies[0].neighbourhood['geom:longitude']]
 			}
-			store.dispatch(setLocality(label, neighbourhood))
-			const pathname = window.location.pathname
-			if (!pathname.includes('venue')) { store.dispatch(setMapView(latlng, 12)) }
+
+			const path = window.location.pathname
 			store.dispatch(setGeolocation({latlng: latlng, label: label}))
+			if (path.includes('venue')) { 
+				store.dispatch(setVenue())
+			} else {
+				store.dispatch(setMapView(latlng, 12))
+			}
+			store.dispatch(setLocality(label, neighbourhood))
 		})
 }
 
@@ -66,7 +72,7 @@ export function getDescendants(id) {
 }
 
 export function getInfo(id) {
-	const endpoint = `https://places.mapzen.com/v1/?method=whosonfirst.places.getInfo&api_key=${config.mapzen.apiKey}&id=${id}&extras=wof:tags,addr:,sg:,geom:latitude, geom:longitude`
+	const endpoint = `https://places.mapzen.com/v1/?method=whosonfirst.places.getInfo&api_key=${config.mapzen.apiKey}&id=${id}&extras=wof:tags,addr:,sg:,geom:latitude,geom:longitude,misc:`
 	return endpoint
 }
 
